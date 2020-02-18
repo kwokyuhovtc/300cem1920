@@ -323,12 +323,12 @@ Following steps below to insert two more activities and prepare the layout file 
 7. Open activity_note_editing.xml and change the ConstraintLayout layout to have the following widgets in it: 
     
     ```xml
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="350dp"
         android:layout_height="300dp"
-        tools:context="com.example.yang.myactivity.NoteEditingActivity">
+        tools:context="shape.coventry.android.NoteEditingActivity">
 
         <TextView
             android:id="@+id/textView"
@@ -386,7 +386,7 @@ Following steps below to insert two more activities and prepare the layout file 
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
     ```
     This is pretty easy to understand. Note line `android:layout_height="0dp"` and `android:layout_weight="1"`. This is basically telling the EditText to occupy all available pace in its parent view. Your screen now should look like:
     
@@ -454,7 +454,7 @@ Open MainActivity.java, follow steps below to insert several functions:
 
     public void goDisplay(View v) {
         Intent intentDisplay = new Intent();
-        intentDisplay.setAction("com.example.jianhuayang.myactivities.ThirdActivity");
+        intentDisplay.setAction("shape.coventry.android.ThirdActivity");
         intentDisplay.putExtra(KEY_MAKE, editTextMake.getText().toString());
         intentDisplay.putExtra(KEY_YEAR, Integer.parseInt(editTextYear.getText().toString()));
         Bundle bundle = new Bundle();
@@ -546,7 +546,7 @@ Do the following to make it possible to collect data passed from MainActivity.
         android:label="@string/title_activity_dispaly"
         android:theme="@style/FullscreenTheme">
         <intent-filter>
-            <action android:name="com.example.jianhuayang.myactivities.ThirdActivity" />
+            <action android:name="shape.coventry.android.ThirdActivity" />
             <category android:name="android.intent.category.DEFAULT" />
         </intent-filter>
 
@@ -900,7 +900,7 @@ Google has listed some commonly used widgets and refers to those collectively as
     ```java
     public void goDisplay(View v) {
         Intent intent = new Intent();
-        intent.setAction("com.example.jianhuayang.myactivities.ThirdActivity");
+        intent.setAction("shape.coventry.android.ThirdActivity");
         intent.putExtra(KEY_MAKE, make);
         intent.putExtra(KEY_Fuel, switchFuel.isChecked());
         intent.putExtra(KEY_YEAR, Integer.parseInt(editTextYear.getText().toString()));
