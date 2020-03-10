@@ -356,7 +356,7 @@ The test you did above used the Deadline constructor that doesn't require the Co
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'org.mockito:mockito-all:1.10.19'
+    implementation 'org.mockito:mockito-core:1.10.19'
     implementation 'org.hamcrest:hamcrest-library:1.3'
     ```
     
