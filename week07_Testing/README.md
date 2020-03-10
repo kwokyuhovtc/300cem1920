@@ -353,11 +353,11 @@ The test you did above used the Deadline constructor that doesn't require the Co
 1. Open build.gradle (Module: app), insert Mockito and Hamcrest dependencies into the dependencies configuration block (after line `testCompile 'junit:junit:4.12'` if exists already)
     
     ```xml
-    testCompile 'junit:junit:4.12'
-    testCompile 'com.android.support:support-annotations:26.1.0'
-    testCompile 'com.android.support.test:rules:0.5'
-    testCompile 'org.mockito:mockito-core:1.10.19'
-    testCompile 'org.hamcrest:hamcrest-library:1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'org.mockito:mockito-all:1.10.19'
+    implementation 'org.hamcrest:hamcrest-library:1.3'
     ```
     
     Mockito is a mocking framework, and Hamcrest is a package to make testing more readable. You'll see both later. Click 'Sync Now' after making changes.
@@ -462,10 +462,10 @@ Follow steps below to create an instrumented unit test:
 2. open build.gradle (Module: app) file, insert following androidTestCompile dependencies into the dependencies block
     
     ```xml
-    androidTestCompile 'com.android.support:support-annotations:26.1.0'
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
+    androidTestImplementation 'com.android.support:support-annotations:26.1.0'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:0.5'
+    androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
     ```
     
     Note in the above the version number of `'com.android.support:support-annotations:26.1.0'` i.e. 26.1.0 must match that of your support library i.e. `compile 'com.android.support:appcompat-v7:26.1.0'`.
