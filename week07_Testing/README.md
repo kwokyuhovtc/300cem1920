@@ -211,7 +211,7 @@ Follow steps below to create the app.
         public int calculate() {
             Date submission;
             try {
-                submission = dateFormat.parse("12/12/17");
+                submission = dateFormat.parse("12/12/20");
                 return (int) ((submission.getTime() - date.getTime() )/ (1000 * 60 * 60 * 24));
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -228,7 +228,7 @@ Follow steps below to create the app.
     }
     ```
     
-    This class has two methods. The `calculate()` method calculates the time difference in days between the input and the submission deadline which is 12/12/17. The `save()` method save the date data in a SharedPreferences xml file.
+    This class has two methods. The `calculate()` method calculates the time difference in days between the input and the submission deadline which is 12/12/20. The `save()` method save the date data in a SharedPreferences xml file.
     
 3. Open MainActivity.java, insert the following into the class:
     
@@ -308,7 +308,7 @@ The critical part of the app above is the capability to calculate time differenc
 4. Insert the following into `calculate()`
     
     ```java
-    Deadline deadline = new Deadline("11/12/17");
+    Deadline deadline = new Deadline("11/12/20");
     assertEquals(deadline.calculate(), 1);
     ```
     
@@ -387,21 +387,21 @@ The test you did above used the Deadline constructor that doesn't require the Co
 
         @Test
         public void testCalculate() throws Exception {
-            Deadline localDeadline = new Deadline("11/12/17");
+            Deadline localDeadline = new Deadline("11/12/20");
             assertEquals(localDeadline.calculate(), 1);
 
         }
 
         @Test
         public void testCalculate2() throws Exception {
-            Deadline anotherDeadline = new Deadline("10/12/17", context);
+            Deadline anotherDeadline = new Deadline("10/12/20", context);
             assertThat("check if time interval is calculated properly", anotherDeadline.calculate(), is(equalTo(2)));
 
         }
 
         @Before
         public void initTests() {
-            deadline = new Deadline("10/12/17", activity);
+            deadline = new Deadline("10/12/20", activity);
         }
 
         @Test
@@ -498,7 +498,7 @@ Follow steps below to create an instrumented unit test:
         @Before
         public void initTests() {
             Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-            deadline = new Deadline("04/12/17", context);
+            deadline = new Deadline("04/12/20", context);
         }
 
         @Test
@@ -541,14 +541,14 @@ Follow steps below to create a UI test:
 
         @Test
         public void changeText_sameActivity() {
-            onView(withId(R.id.editText)).perform(typeText("11/12/17"), closeSoftKeyboard());
+            onView(withId(R.id.editText)).perform(typeText("11/12/20"), closeSoftKeyboard());
             onView(withId(R.id.buttonUpdate)).perform(click());
             onView(withId(R.id.textView)).check(matches(withText("1 days to 300CEM deadline!")));
         }
 
         @Test
         public void changeText_newActivity() {
-            onView(withId(R.id.editText)).perform(typeText("12/12/17"), closeSoftKeyboard());
+            onView(withId(R.id.editText)).perform(typeText("12/12/20"), closeSoftKeyboard());
             onView(withId(R.id.buttonSend)).perform(click());
             onView(withId(R.id.textView)).check(matches(withText("18 days until 2017!")));
         }
