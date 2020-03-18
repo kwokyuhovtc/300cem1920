@@ -318,7 +318,7 @@ The critical part of the app above is the capability to calculate time differenc
     public class DeadlineTest {
         @Test
         public void calculate() throws Exception {
-            Deadline deadline = new Deadline("12/12/16");
+            Deadline deadline = new Deadline("12/12/19");
             assertEquals(deadline.calculate(), 1);
         }
     }
