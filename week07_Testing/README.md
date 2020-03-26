@@ -358,8 +358,8 @@ The test you did above used the Deadline constructor that doesn't require the Co
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'org.mockito:mockito-core:1.10.19'
     implementation 'org.hamcrest:hamcrest-library:1.3'
-    implementation 'com.android.support.test:runner:1.0.2'
-    implementation 'com.android.support.test:rules:0.5'    
+    implementation 'com.android.support.test:runner:1.2.0'
+    implementation 'com.android.support.test:rules:1.2.0'    
     ```
     
     Mockito is a mocking framework, and Hamcrest is a package to make testing more readable. You'll see both later. Click 'Sync Now' after making changes.
@@ -465,8 +465,8 @@ Follow steps below to create an instrumented unit test:
     
     ```xml
     androidTestImplementation 'com.android.support:support-annotations:26.1.0'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test:rules:0.5'
+    androidTestImplementation 'com.android.support.test:runner:1.2.0'
+    androidTestImplementation 'com.android.support.test:rules:1.2.0'
     androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
     ```
     
