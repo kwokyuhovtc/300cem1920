@@ -48,11 +48,11 @@ Once installed, click on the 'Configure' menu under 'Quick Start' tab, and then 
 
 > This way of installing SDK is easy when you first get started. But the drawback is it takes a lot of disk space. When you get your head around different SDK components, you might want to customize the installation using SDK Manager.
 
-![SDK manager](.md_images/sdk_manager.png)
+![SDK manager](images/sdk_manager.png)
 
 If you click the 'Launch Standalone SDK Manager', you'll see the standalone SDK manager window (you guessed it!). Make sure that Intel Accelerator is installed. When you click the check box to install, what actually being installed is just the installation package. You'll need to find out where the installation package is and double click it. Read [this](https://software.intel.com/en-us/android/articles/installation-instructions-for-intel-hardware-accelerated-execution-manager-windows) to get more help.
 
-![Intel accelerator](.md_images/intel_acc.png)
+![Intel accelerator](images/intel_acc.png)
 
 When you finally write your own app you want to test and see how it works, that's why we need an Android system image and the optional Android device. From my own experience, real devices run much faster than AVDs (Android virtual devices). Well, I guess it's not just myself, other people are complaining too, see [here](http://stackoverflow.com/questions/1554099/why-is-the-android-emulator-so-slow-how-can-we-speed-up-the-android-emulator). So I would encourage you to use your own device. If you don't have one, don't worry, an ADV has been installed together with Android Studio. We'll come back to that later on.
 
@@ -66,11 +66,11 @@ Follow the steps below to create and run your first Android app:
 2. In 'Project location' settings select your desired location.
 3. Next screen asks you to choose minimum SDK. The default value should do. If you want to know more about this minimum SDK, click on 'Help me choose' and read the info that comes up. Does it look familiar?
 
- ![Android_Platform_API_Version_Distribution](.md_images/Android_Platform_API_Version_Distribution.png)
+ ![Android_Platform_API_Version_Distribution](images/Android_Platform_API_Version_Distribution.png)
 
 4. Use all default settings until you see Finish. Click Finish to create your first Android project. Your screen should look similar to below:
 
- ![activity_main_xml_-_Hello_Android](.md_images/activity_main_xml_-_Hello_Android.png)
+ ![activity_main_xml_-_Hello_Android](images/activity_main_xml_-_Hello_Android.png)
  
 5. You're ready to run the app you just created. Before you do that, let's check if you have an emulator or Android device attached. Click Tools ==> Android ==> AVD Manager to show the AVD Manager. Make sure you have the default AVD installed. Click the littler green triangle next to the AVD to run it.
 
@@ -78,7 +78,7 @@ Follow the steps below to create and run your first Android app:
  
 5. Click Run ==> Run 'app' to run the app you just created. In the window that pops up, click 'Launch emulator' and choose the desired AVD if you have more than one. BTW, you should only have 1 AVD running, otherwise, the system will be rather slow. You will see HelloAndroid running in AVD similar to the one below.
 
- ![hello_android](.md_images/hello_android.png)
+ ![hello_android](images/hello_android.png)
 
 6. If you are lucky enough to have an Android device attached to the computer you can use it for testing. But first of all, you'll need to make your device debuggable. Use your device with Macs is a two-step process:
 
@@ -89,7 +89,7 @@ Follow the steps below to create and run your first Android app:
  
  Now return to our Hello Android app. When I run it on my Nexus it looks like the image below. Can you see any differences?
  
- ![hello_android](.md_images/hello_nexus.png)
+ ![hello_android](images/hello_nexus.png)
 
 ### Android Studio guided tour
 
@@ -112,11 +112,11 @@ In the editor window, there're some important keyboard shortcuts that you need t
 
 Now take a look at the location you selected earlier to save the project. What you will see is that a bunch of files has been generated. Don't worry you don't need to know them all!
 
-![Android Studio UI](.md_images/hello_files.png)
+![Android Studio UI](images/hello_files.png)
 
 The most important ones, however, are being contained in app/src/main. Actually when I download samples from Android website, sometimes I just go into this folder and ignore the rest.
 
-![Android Studio UI](.md_images/hello_files2.png)
+![Android Studio UI](images/hello_files2.png)
 
 1. activity_main.xml. This is the XML layout file for the activity you added when you created the project with Android Studio. In simple words, in Android activity represent a single screen where your users can perform certain tasks. Thus this xml defines your first (and only) screen in your app. The file at the moment includes a TextView only that displays the message "Hello world!".
 2. MainActivity.java. This is the Java class that associates the xml layout file with different functions such as respond to a button click. When you build and run the app, the Activity class starts the activity and loads the layout file that says "Hello World!".
@@ -151,17 +151,17 @@ Follow steps below to create another app:
 3. Use all default settings until you see Finish. These steps are the same as before and should become the *de facto* standard.
 4. Double click to open 'activity_main.xml' if it’s not opened already.
 
- ![Content main](.md_images/activity_main.png)
+ ![Content main](images/activity_main.png)
 
 5. Under default settings, the 'Text' view will show. Click 'Preview' tool window to the right edge of the IDE to bring up the Preview window. Your whole workbench should look like below.
 
- ![Content main](.md_images/text_view.png)
+ ![Content main](images/text_view.png)
 
 6. Delete texts contained between '<span>&lt;</span>TextView' and the closing '/>'. You'll see that the words 'Hello World' disappeared on the preview window.
 
 7. Click the 'Design' tab to switch to the design view. Locate and drag the following four widgets from Palette to the layout one by one: TextView, (another) TextView, Plain Text, and Button. Your Component Tree should look at the following
 
- ![Content main](.md_images/component_tree.png)
+ ![Content main](images/component_tree.png)
 
 8. At this point, if you click one of the widgets you just dragged onto the graphical layout, you can change its properties using the Properties window. Try to change some of the properties to see the effects, and we’ll change them back later.
 
@@ -235,7 +235,7 @@ Follow steps below to create another app:
 
 12. Now if you run this app, once you input something, for example your name and click Display, your name will appear in the greeting message. 
 
-![hello jianhua](.md_images/hello_jianhua.png)
+![hello jianhua](images/hello_jianhua.png)
 
 ### Logging and debugging
 
@@ -264,7 +264,7 @@ Sometimes when you program your app you want to see your program's outputs but y
 
 4. Run the app and input your name in the textbox and then click 'DISPLAY'. In 'Android Monitor' tool window under the logcat tab, key in 'HelloMeActivity', you should see the message similar to below. If you click 'DISPLAY' another time, you'll see the message comes up twice.
 
-![logcat](.md_images/logcat.png)
+![logcat](images/logcat.png)
 
 **Simple debugging**
 
@@ -272,11 +272,11 @@ Logging allows you to see the output your app produces, but sometimes you want t
 
 1. Click on the left margin of the editor (there's a name for this area, which is 'Gutter') to set breakpoints. First one at line 23, and the second one at line 24.
 
- ![breaks](.md_images/breaks.png)
+ ![breaks](images/breaks.png)
 
 2. Click Run ==> Debug 'app' to run in the debug mode. Key in your name in the text box and hit 'Display'. Now you'll see that your app stops at the first breakpoint.
 
- ![debug](.md_images/debug.png)
+ ![debug](images/debug.png)
 
 3. Click on the right most icon on the horizontal mini toolbar to bring up the 'Evaluate expression' window and type in 'nameToDisplay'. This gives you no results as expected, as the app hasn't reached that line yet.
 
@@ -290,27 +290,19 @@ Android studio has built-in version control system (VCS) support. In fact, there
 
  > If you use Windows at home, you'll need to [download](https://git-scm.com/downloads) and install Git. Some versions of Git set a user's home folder as it's default location (e.g. C:\users\[your username]\). To get rid of this, you need to open Git shell in the Linux version, navigate to that location and delete a folder called `.git`.
 
- ![git](.md_images/git.png)
+ ![git](images/git.png)
 
 2. Go back to Android Studio, click VCS ==> Enable Version Control Integration..., and select Git as the tool. Now the 'Version Control' tool window will turn from pale to bright colors.
 
 3. Locate your project title in the left-most position in the navigation bar, right-click on it and select Git ==> Add to add all files in your current project under control o Git. If you look at the 'Local Changes' tab in the 'Version Control' tool window, your 'Unversioned Files' will disappear and all files are under 'Default'.
 
- ![vcs_default](.md_images/vcs_default.png)
+ ![vcs_default](images/vcs_default.png)
  
 4. Click VCS ==> Commit Changes, and type in something as your commit message and hit commit. Your project at the current stage is saved in a snapshot, that means you can revert to it at any time later on.
 
  > Some people have problems with previous versions of Android Studio here. If you cannot commit, uncheck all check boxes and try again.
  
- ![commit](.md_images/Commit_Changes.png)
-
-5. Now comes the important bit. For the assignment of the module, you are required to create an app and submit using Bitbucket. To do this, you need to, first of all, create a new repository on Bitbucket. Once created, go into that repository and copy the https URL by clicking  'three dots' ==> Clone ==> HTTPS. The URL that begins with https until the end is what you need. For example, my testing project is at https://jianhuayang@bitbucket.org/jianhuayang/test.git.
-
- > See [here](https://confluence.atlassian.com/bitbucket/create-a-git-repository-759857290.html) for official Atlassian documentation on creating a repository.
- 
- ![bitbucket](.md_images/Bitbucket.png)
-
-6. In Android Studio, select VCS ==> Git ==> Push, in the window that pops up click 'Define remote' and paste the URL that you noted previously. Now click Push and your project is online at Bitbucket. To verify that you've pushed successfully, you can see the console log, or you can check in the actual online repository.
+ ![commit](images/Commit_Changes.png)
 
 ## Lab 3 Advanced topics
 
