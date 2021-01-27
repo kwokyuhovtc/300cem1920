@@ -26,11 +26,11 @@ Follow steps below to create your app and initialize your layout file:
   * Numer
   * Button
   
-  ![drag](.md_images/raw_layout.png)
+  ![drag](images/raw_layout.png)
   
  When you drag widgets, in the graphical layout you'll see guidelines that show you which widget is being used as the guide. This gives you some idea of where to place your widgets.
  
- ![drag](.md_images/drag.png)
+ ![drag](images/drag.png)
  
 4. In design view, double-click on the word 'Hello World!' in the graphical layout, the 'text' field in the property tool window will be highlighted. Type in 'Type and Run' in the text field, and make sure it's 'textView' in the ID field, and hit enter. You'll see the texts being displayed has changed to 'Type and Run'. We could do this for all widgets on the graphical layout. But normally we only drag and drop on a relatively rough scale, and then fine-tune the layout in Text view i.e. editing xml files directly.
 
@@ -127,7 +127,7 @@ Following steps below to build a new class:
 
 1. In the Project tool window, switch to Android mode if it's not the current mode. Right click the package name under java folder, and select New ==> Java Class. Give it a name such as Vehicle.
 
- ![new class](.md_images/new_class.png)
+ ![new class](images/new_class.png)
 
 2. Next, open Vehicle.java file and declare some variables:
 
@@ -273,7 +273,7 @@ Following steps below to build a new class:
         ```
 11. Now you have everything you need, but it may not be in a nice readable order. What Android Studio offers here is a rearrangement function. Click Code ==> Rearrange Code to see if it makes any differences. The rules Android Studio uses can be configured using Preferences ==> Editor ==> Code Style ==> Java
 
- ![rearrange](.md_images/rearrange.png)
+ ![rearrange](images/rearrange.png)
 
 ### Link layout with behavior
 
@@ -317,7 +317,7 @@ Follow steps below to create an onButtonClick method that responds to a user cli
     
         What you just inserted a so-called 'live template' into your codes. There're other templates available in Android Studio, and you can also define your own templates
         
-        ![templates](.md_images/templates.png)
+        ![templates](images/templates.png)
 
 3. Insert the following attribute intuo the Button tag in 'activity_main.xml'
     
@@ -327,9 +327,9 @@ Follow steps below to create an onButtonClick method that responds to a user cli
     
 3. Now your are ready to test-drive your new app. Type in the make and year of your car and click RUN to see what happens. You can also leave out the year box blank to see if the app gives you a default year. Check the system log to see how many times you've clicked.
 
- ![mini](.md_images/mini.png)
+ ![mini](images/mini.png)
 
- ![mini log](.md_images/mini_log.png)
+ ![mini log](images/mini_log.png)
 
 ## Lab 2 Classes and objects
 
@@ -348,7 +348,7 @@ Follow steps below to create a new app and design the layout:
 4. Add the following attribute into LinearLayout opening tag 'android:orientation="vertical'. There're two types of orientations available in a LinearLayout, either vertical or horizontal.
 5. Drag and drop the following widgets onto the graphical layout, in any order: three TextViews, two Plain Texts, one Number, one LinearLayout (Horizontal), and two Buttons. Try to arrange the widgets so that it looks like the following. You may not be able to make your paddings/margins match exactly the same as in the example image, but at least you need to make sure the UI elements are in the same order.
 
- ![linear](.md_images/linear.png)
+ ![linear](images/linear.png)
  
 6. Switch to the text view, and edit the xml code so it looks like
 
@@ -605,11 +605,11 @@ Now we're ready to explore inheritance in java:
  ```
 5. Insert `android:onClick="onButtonClick"' for both buttons in 'activity_main.xml'. Now if you run the app you'll see something similar to below
 
-    ![bloodhound](.md_images/bloodhound.png)
+    ![bloodhound](images/bloodhound.png)
     
-    ![vw](.md_images/vw.png)
+    ![vw](images/vw.png)
     
-    ![vw5](.md_images/vw5.png)
+    ![vw5](images/vw5.png)
 
 ### Java naming conventions
 
