@@ -2,8 +2,6 @@
 
 First of all, welcome and thank you for choosing 300CEM - you did the right thing! No offense to anyone, but I believe Android (or mobile technology in general) is the way to the future! If you think about it - what the mobile phones were like 5 years ago and what they are like right now - you'll see how rapidly technologies have evolved. And this has affected our everyday life in every possible way!
 
-> If you're taking the Monday (03/10) or Tuesday (04/10) lab sessions, watch out for the [big news](https://madeby.google.com) from Google on 4th October (California time)!
-
 ## Lab 1 Introduction to Android Studio
 
 This is the 1st of a series of 11-week exercises for Module 300CEM. In this 1st lab, you'll find out the things you need to have to become an Android developer. You'll also design and run your 1st Android app.
