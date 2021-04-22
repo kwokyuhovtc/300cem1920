@@ -71,7 +71,7 @@ __Get last known location__
 The app builds the GoogleApiClient to begin with. Once it is built, the client connects to Google Play services in the background. If it connects successfully, getting the last known location is just a single line of code
 
 ```java
-mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+mLastLocation = LocationServices.getFusedLocationProviderClient(this).getLastLocation().getResult();
 ```
 
 Note here even though at the very beginning of this document we mentioned that the Google Play services location APIs are preferred over the Android framework location APIs, `getLastLocation()` function will, in fact, return an `android.location.Location` object.
@@ -81,16 +81,19 @@ __Receive location updates__
 To receive location updates, i.e. get notified each time the device has a new location, use the following code
 
 ```java
-LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(req, callback, Looper.myLooper());
 ```
 
 In the above code, `this` pass the current object as the listener by implementing the `onLocationChanged()` method.
 
 ```java
- @Override
-    public void onLocationChanged(Location location) {
-    //actual code
-    }
+LocationCallback callback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                Location location = locationResult.getLastLocation();
+            }
+        };
 ```
 
 __Turn geographic location into addresses__
@@ -112,7 +115,7 @@ apply plugin: 'com.android.application'
     ...
 
     dependencies {
-        compile 'com.google.android.gms:play-services-location:11.0.4'
+        compile 'com.google.android.gms:play-services-location:18.0.0'
     }
 ```
 
