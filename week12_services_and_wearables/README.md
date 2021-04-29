@@ -300,7 +300,13 @@ The My Wearables app created previously uses notifications on wearable to contro
     
     ```xml
     wearApp project(':wear')
-    compile 'com.google.android.gms:play-services:11.0.4'
+     implementation 'androidx.wear:wear:1.0.0'
+     // The support library dependencies below are mainly needed for the production watch face library.
+     // There are multiple Jetpack libraries that should cover your other needs.
+     implementation 'com.google.android.support:wearable:2.7.0'
+     compileOnly 'com.google.android.wearable:wearable:2.7.0'
+     implementation 'com.google.android.gms:play-services-base:17.6.0'
+     implementation 'com.google.android.gms:play-services-wearable:17.1.0'
     ```
     
     The reason for doing this i.e. including wear module inside a mobile module, is that a wearable app needs to be included in the corresponding mobile app in order to be installed. This makes sense as there are no standalone wear apps.
@@ -332,7 +338,7 @@ The My Wearables app created previously uses notifications on wearable to contro
     private Button button;
     private static final long CONNECTION_TIME_OUT_MS = 100;
     private String message;
-    private GoogleApiClient client;
+    private GoogleApi client;
     private String nodeId;
     ```
     
@@ -389,18 +395,16 @@ The My Wearables app created previously uses notifications on wearable to contro
     private void retrieveDeviceNode() {
         new Thread(new Runnable() {
             @Override
-            public void run() {
-                client.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
-                NodeApi.GetConnectedNodesResult result =
-                        Wearable.NodeApi.getConnectedNodes(client).await();
-                List<Node> nodes = result.getNodes();
-                if (nodes.size() > 0) {
-                    nodeId = nodes.get(0).getId();
-                    Log.d("DEBUG_KEY", "size "+Integer.toString(nodes.size()));
-
-                    Log.d("DEBUG_KEY", nodeId);
-                }
-                client.disconnect();
+            public void run() {                  
+                Wearable.getNodeClient(this).getConnectedNodes().addOnCompleteListener(new OnCompleteListener<List<Node>>() {
+                    @Override
+                    public void onComplete(@NonNull Task<List<Node>> task) {
+                           List<Node> nodes = task.getResult();
+                           if(nodes.size() > 0) {
+                                  nodeId = nodes.get(0).getId();
+                           }
+                    }
+                });
             }
         }).start();
     }
