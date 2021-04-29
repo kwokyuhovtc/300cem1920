@@ -1,3 +1,8 @@
+# Update, link up android wear and android phone emulators
+
+Please refer to the following link: 
+https://stackoverflow.com/questions/25205888/pairing-android-and-wear-emulators
+
 # Services and wearables
 
 This week we look at Android wearables i.e. watches. There are mainly two different usages of Android watches: 
