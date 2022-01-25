@@ -1,14 +1,4 @@
-# The Java language
-
-Hmm... Java... This is huge, where should we start?
-
-In their latest book [Android Programming: The Big Nerd Ranch Guide (2nd Edition)](http://www.amazon.co.uk/dp/0134171454/ref=sr_1_1?s=books&ie=UTF8&qid=1443519722&sr=1-1&keywords=android+big+nerd+ranch) the authors claimed that:
-
-> "... you need to be familiar with Java, including classes and objects, interfaces, listeners, packages, inner classes, anonymous inner classes, and generic classes. If these ideas do not ring a bell, you will be in the weeds by page 2 ..."
-
-I couldn't agree more. So we'll start from there.
-
-![](https://www.bignerdranch.com/img/books/book-covers/android-cover.jpg)
+# The Kotlin Language
 
 ## Lab 1 Language concepts
 
@@ -44,64 +34,67 @@ Follow steps below to create your app and initialize your layout file:
         android:layout_height="wrap_content"
         android:text="Type and Run"
         android:textColor="@android:color/darker_gray"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/labelMake"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/textView"
         android:layout_marginLeft="19dp"
         android:layout_marginTop="56dp"
         android:text="Make:"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView" />
 
     <EditText
         android:id="@+id/inputMake"
         android:layout_width="800dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/labelMake"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="10dp"
-        android:layout_toEndOf="@id/labelMake"
-        android:layout_toRightOf="@+id/labelMake"
         android:ems="10"
         android:hint="e.g. BMW"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        app:layout_constraintBaseline_toBaselineOf="@+id/labelMake"
+        app:layout_constraintLeft_toRightOf="@+id/labelMake"
+        app:layout_constraintStart_toEndOf="@id/labelMake" />
 
     <TextView
         android:id="@+id/lableYear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/labelMake"
-        android:layout_alignStart="@id/labelMake"
-        android:layout_below="@id/labelMake"
         android:layout_marginTop="20dp"
         android:text="Year:"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        app:layout_constraintLeft_toLeftOf="@id/labelMake"
+        app:layout_constraintStart_toStartOf="@id/labelMake"
+        app:layout_constraintTop_toBottomOf="@id/labelMake" />
 
     <EditText
         android:id="@+id/inputYear"
         android:layout_width="800dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/lableYear"
-        android:layout_alignBottom="@+id/lableYear"
-        android:layout_alignLeft="@id/inputMake"
-        android:layout_alignStart="@+id/inputMake"
         android:ems="10"
         android:hint="e.g. 1980"
-        android:inputType="number" />
+        android:inputType="number"
+        app:layout_constraintBaseline_toBaselineOf="@+id/lableYear"
+        app:layout_constraintBottom_toBottomOf="@+id/lableYear"
+        app:layout_constraintLeft_toLeftOf="@id/inputMake"
+        app:layout_constraintStart_toStartOf="@+id/inputMake" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/lableYear"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="22dp"
-        android:text="Run" />
+        android:text="Run"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lableYear" />
  ```
  
  You have done something similar to this (hopefully!) in last week's labs - editing different Android tags and attributes. We'll now have a closer look. And we'll look at them again later on during the module.
@@ -125,18 +118,17 @@ Follow steps below to create your app and initialize your layout file:
 
 Following steps below to build a new class:
 
-1. In the Project tool window, switch to Android mode if it's not the current mode. Right click the package name under java folder, and select New ==> Java Class. Give it a name such as Vehicle.
+1. In the Project tool window, switch to Android mode if it's not the current mode. Right click the package name under java folder, and select New ==> Kotlin Class. Give it a name such as Vehicle.
 
  ![new class](images/new_class.png)
 
-2. Next, open Vehicle.java file and declare some variables:
+2. Next, open Vehicle.kt file and declare some variables:
 
- ```java
- public class Vehicle {
-    private String make;
-    private int year;
-    private String message;
-    public static int counter = 0;
+ ```kotlin
+ class Vehicle(var make : String, var year : Int, var message : String) {
+    companion object {
+        var count : Int = 0
+    }
 }
  ```
  There're several things you need to know in the above codes:
@@ -147,96 +139,68 @@ Following steps below to build a new class:
   * The part 'counter = 0' is an assignment expression that sets the counter to zero. All instance variables in Java have default values, and a default value for int is 0. So this step is not really necessary, but this is considered good coding practices. Local variables e.g. those appear in a for loop, have to be initialized before first use. This is the same as in Python.
   * Note the concluding semicolons at the end of each line. This makes the assignment expression a declaration statement. In Python, we don't normally use semicolons, but this is mandatory in Java. 
 
-3. Right click anywhere between class's opening and closing curly brackets, and select Generate ==> Constructor ==> Select None, this will automatically generate a constructor for you.
- ```java
- public Vehicle() {
-    }
- ```
-4. Type in the following lines of code into the constructor. As you type, Android Studio will give some suggestions, you can use up/down arrow keys to navigate and tab key to select.
 
- ```java
-    public Vehicle() {
-        this.make = "Volvo";
-        this.year = 2012;
-        this.message = "This is the default message.";
+3. Type in the following lines of code into the constructor. As you type, Android Studio will give some suggestions, you can use up/down arrow keys to navigate and tab key to select.
+
+ ```kotlin
+    class Vehicle(var make : String = "Volvo", 
+              var year : Int = 2012, 
+              var message : String = "This is the default message.") {
+    companion object {
+        var count : Int = 0
     }
+}
  ```
  
-5. Use the generator to generate two other constructors, so your code looks like this
- ```java
-    public Vehicle(String make, int year) {
-        this.make = make;
-        this.year = year;
-        this.message = "Your car is a " + make + " built in " + year + ".";
-    }
+4. You may override method from superclass using override keywords
 
-    public Vehicle(String make) {
-        this();
-        this.make = make;
-        message = "You didn't type in year value.";
+ ```kotlin
+    override fun toString() : String{
+        return message
     }
  ```
- The reason we need more than one constructor is that the user may not provide all the info we need. In case this happens, we'll use the default values stored in our class. Constructors in Java are public methods with the same name as the class without return types. Normally methods in Java are defined including the following components：
-  * Modifiers. In the case of constructors, these are most likely to be public (don't have to, though).
-  * Return types. Ordinary methods must have return types e.g. String and a return statement in its method body. For constructors, this is not required.
-  * Name. This is needless to say. For constructors, though, this must be the same as class name.
-  * Parameter list. In our examples, this is a single parameter 'String make' or parameters separated by comma 'String make, int year'.
-  * A method's signature is the method's name and the parameter types. For example, the signature of the last constructor is Vehicle(String make).
-  * In our simple example above, we overloaded the constructor methods. By **overloading** I meant methods with the same name but different input parameters.
- 
- Note the 'this' keyword in the second constructor 'this.make = make;'. In this case, this.make refers to the instance variable in the class, while make refers to the parameter of the method.
- 
-6. Use Android Studio's code generator to generate a getter method for the message.
 
- ```java
-    public String getMessage() {
-        return message;
+ 
+5. Insert the following within the class definition:
+
+ ```kotlin
+ init {
+        this.message = "Your car is a $make built in $year."
+        count()
     }
- ```
-7. Click anywhere within the class definition, then click Code ==> Override Methods ==> toString, this will generate a toString method overriding the toString method in class Object, which is the superclass of all classes in Java. Replace super.toString() with message. 
-
- ```java
-    @Override
-    public String toString() {
-        return message;
-    }
- ```
- Note the @Override part at the beginning of the line, this is called annotations. When Java compiler sees it, it double-checks that the subclass is overriding a method with the same signature in the superclass. By **overriding** I meant a method with the same signature. If this is not the case, the compiler will complain. There're quite a number of annotations in Java, but this Override is what you see the most in Android.
- 
-8. Insert the following within the class definition:
-
- ```java
- private void count(){
-    this.counter++;
- }
  ```
  This method increase the internal counter each time it is called.
 
-9. Insert the count() method into the 'non-default' constructors, so that each time the constructor is called the counter will increase.
+6. Insert the count() method into the 'non-default' constructors, so that each time the constructor is called the counter will increase.
 
- ```java
-    public Vehicle(String make, int year) {
-        this.make = make;
-        this.year = year;
-        this.message = "Your car is a " + make + " built in " + year + ".";
-        count();
+ ```kotlin
+class Vehicle(var make : String = "Volvo",
+              var year : Int = 2012,
+              var message : String = "This is the default message.") {
+    
+    init {
+        this.message = "Your car is a $make built in $year."
+        count()
     }
 
-    public Vehicle(String make) {
-        this();
-        this.make = make;
-        message = "You didn't type in year value.";
-        count();
+    companion object {
+        var count : Int = 0
     }
+
+    override fun toString() : String{
+        return message
+    }
+
+    fun count(){
+        Vehicle.count += 1
+    }
+}
  ```
-10. Now you need to comment your codes to increase its readability. There are three types of comments in Java
+7. Now you need to comment your codes to increase its readability. There are three types of comments in Java
     1. A line comment starts with //, it is inserted when you press 'cmd' + '/' together
         
         ```java
          // the default constructor
-         public Vehicle() {
-         ...
-         }
         ```
     2. A block comment is in between <span>/&#42;</span> and */, it's inserted when you press 'alt' + 'cmd' + '/' together
         
@@ -244,36 +208,8 @@ Following steps below to build a new class:
          /*
           * This constructor takes two parameters.
          */
-         public Vehicle(String make, int year) {
-         ...
-         }
         ```
-    3. Documentation comments are a special kind of comments that are processed by the [Javadoc tool](http://www.oracle.com/technetwork/articles/java/index-jsp-135444.html). It begins with <span>/&#42;&#42;</span> and finishes with <span>&#42;/</span>. It's used to automatically generate documentations. The system has already generated Javadoc for you at the begining of the file with your user name and date, you can insert author and version info there.
-        
-        ```java
-         /**
-         * Created by jianhuayang on 08/10/16.
-         * @author jianhuayang
-         * @version 1.1
-         */
-         public class Vehicle {
-         ...
-         }
-        ```
-        You can also insert the following Javadoc for your constructor
-           
-        ```java
-         /**
-          * The constructor that takes only the make of the car.
-          * @param make the make of your car.
-         */
-         public Vehicle(String make) {
-         ...
-         }
-        ```
-11. Now you have everything you need, but it may not be in a nice readable order. What Android Studio offers here is a rearrangement function. Click Code ==> Rearrange Code to see if it makes any differences. The rules Android Studio uses can be configured using Preferences ==> Editor ==> Code Style ==> Java
 
- ![rearrange](images/rearrange.png)
 
 ### Link layout with behavior
 
@@ -281,29 +217,23 @@ Follow steps below to create an onButtonClick method that responds to a user cli
 
 1. Open MainActivity.java, insert the following variables just after MainActivity class declaration i.e. immediately after `public class MainActivity extends AppCompatActivity {`
 
- ```java
-    private static final String TAG = "MyVehicleActivity";
-    private EditText editTextMake;
-    private EditText editTextYear;
+ ```kotlin
+    val TAG = "MyVehicleActivity"
+    var editTextMake : EditText? = null
+    var editTextYear : EditText? = null
  ```
 2. Create a method called onButtonClick
- ```java
-    public void onButtonClick(View view) {
-        editTextMake = (EditText) findViewById(R.id.inputMake);
-        editTextYear = (EditText) findViewById(R.id.inputYear);
-        String make = editTextMake.getText().toString();
-        String strYear = editTextYear.getText().toString();
+ ```kotlin
+    fun onButtonClick(view : View){
+        editTextMake = this.findViewById(R.id.inputMake)
+        editTextYear = this.findViewById(R.id.inputYear)
+        val make = this.editTextMake?.text.toString()
+        val year = this.editTextYear?.text.toString()
 
-        Vehicle vehicle;
-        if (strYear.matches("")) {
-            vehicle = new Vehicle(make);
-        } else {
-            int intYear = Integer.parseInt(strYear);
-            vehicle = new Vehicle(make, intYear);
-        }
-        Toast.makeText(getApplicationContext(), vehicle.getMessage(), Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "User clicked " + Vehicle.counter + " times.");
-        Log.d(TAG, "User message is \"" + vehicle + "\".");
+        val vehicle = Vehicle(make, year.toInt())
+        Toast.makeText(this, vehicle.message, Toast.LENGTH_LONG).show()
+        Log.d(TAG, "User clicked $Vehicle.count times")
+        Log.d(TAG, "User message is $vehicle.")
     }
  ```
  
@@ -331,7 +261,7 @@ Follow steps below to create an onButtonClick method that responds to a user cli
 
  ![mini log](images/mini_log.png)
 
-## Lab 2 Classes and objects
+## Lab 2 Classes and objects (Work on Next Week)
 
 A single class can do quite a lot. But very often you want more than one classes. In this second lab, we'll look at how different classes interact with each other.
 
