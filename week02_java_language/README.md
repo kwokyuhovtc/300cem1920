@@ -120,8 +120,6 @@ Following steps below to build a new class:
 
 1. In the Project tool window, switch to Android mode if it's not the current mode. Right click the package name under java folder, and select New ==> Kotlin Class. Give it a name such as Vehicle.
 
- ![new class](images/new_class.png)
-
 2. Next, open Vehicle.kt file and declare some variables:
 
  ```kotlin
