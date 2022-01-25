@@ -229,7 +229,7 @@ Follow steps below to create an onButtonClick method that responds to a user cli
 
         val vehicle = Vehicle(make, year.toInt())
         Toast.makeText(this, vehicle.message, Toast.LENGTH_LONG).show()
-        Log.d(TAG, "User clicked $Vehicle.count times")
+        Log.d(TAG, "User clicked " + Vehicle.count + "times")
         Log.d(TAG, "User message is $vehicle.")
     }
  ```
