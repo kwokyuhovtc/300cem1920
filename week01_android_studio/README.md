@@ -169,58 +169,70 @@ Follow steps below to create another app:
 
  ```xml
  <TextView
-     android:id="@+id/textViewDisplay"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_alignParentLeft="true"
-     android:layout_alignParentStart="true"
-     android:layout_alignParentTop="true"
-     android:text="Hellow World"
-     android:textSize="24sp" />
+        android:id="@+id/textViewDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Hellow World"
+        android:textSize="24sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
- <TextView
-     android:id="@+id/textView2"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_alignLeft="@+id/textViewDisplay"
-     android:layout_alignStart="@+id/textViewDisplay"
-     android:layout_below="@+id/textViewDisplay"
-     android:layout_marginLeft="19dp"
-     android:layout_marginTop="56dp"
-     android:text="Name:"
-     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewDisplay"
+        android:layout_alignStart="@+id/textViewDisplay"
+        android:layout_alignLeft="@+id/textViewDisplay"
+        android:layout_marginLeft="19dp"
+        android:layout_marginTop="56dp"
+        android:text="Name:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintLeft_toLeftOf="@+id/textViewDisplay"
+        app:layout_constraintStart_toStartOf="@+id/textViewDisplay"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDisplay" />
 
- <EditText
-     android:id="@+id/editText"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_alignBaseline="@id/textView2"
-     android:layout_alignBottom="@id/textView2"
-     android:layout_marginLeft="36dp"
-     android:layout_toRightOf="@id/textView2"
-     android:ems="10"
-     android:inputType="textPersonName" />
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/textView2"
+        android:layout_alignBottom="@id/textView2"
+        android:layout_marginLeft="36dp"
+        android:layout_toRightOf="@id/textView2"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBaseline_toBaselineOf="@id/textView2"
+        app:layout_constraintBottom_toBottomOf="@id/textView2"
+        app:layout_constraintLeft_toRightOf="@id/textView2" />
 
- <Button
-     android:id="@+id/button"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_below="@+id/editText"
-     android:layout_marginTop="22dp"
-     android:layout_centerHorizontal="true"
-     android:text="Display" />
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:text="Display"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
  ```
  > Don't worry if you don't fully understand all these, we'll go through them later on.
 
 10. Open MainActivity.java, create a method called onButtonClick that looks like below:
 
- ```java
-  public void onButtonClick(View view) {
-     EditText editName = (EditText) findViewById(R.id.editText);
-     TextView textDisplay = (TextView) findViewById(R.id.textViewDisplay);
-     String nameToDisplay = editName.getText().toString();
-     textDisplay.setText("Hello " + nameToDisplay);
- }
+ ```kotlin
+  fun onButtonClick(view : View){
+        val editName = this.findViewById<EditText>(R.id.editText)
+        val textDisplay = this.findViewById<TextView>(R.id.textViewDisplay)
+        val nameToDisplay = editName.getText().toString()
+        textDisplay.setText("Hello $nameToDisplay")
+    }
  ```
  Note when you first use a class that hasn't been imported, Android Studio will show the class name in red. You'll need to import the class. The keyboard shortcut to do the importing is 'alt' + 'enter'.
 
@@ -235,99 +247,3 @@ Follow steps below to create another app:
 
 ![hello jianhua](images/hello_jianhua.png)
 
-### Logging and debugging
-
-**Logging**
-
-Sometimes when you program your app you want to see your program's outputs but you want to hide it from your users. Android logging system is what you need. Do the following to produce a log in the previous app you created.
-
-1. Add a line of code in the 'onButtonClick' method, so it looks like below
-
- ```java
- public void onButtonClick(View view) {
-        EditText editName = (EditText) findViewById(R.id.editText);
-        TextView textDisplay = (TextView) findViewById(R.id.textViewDisplay);
-        String nameToDisplay = editName.getText().toString();
-        textDisplay.setText("Hello " + nameToDisplay);
-        Log.d(TAG, nameToDisplay + ", this is your system log!");
-    }
- ```
- 
-2. Note 'Log.d' appears in red color. Move your mouse into it and press 'alt' + 'enter' to import Log class.
-3. Also, note that 'TAG' appears in red color too. This is because the variable hasn't been declared. Now go to the line which is just after Activity class signature (and before onCreate method), and insert the following:
-
- ```java
-     private static final String TAG = "HelloMeActivity";
- ```
-
-4. Run the app and input your name in the textbox and then click 'DISPLAY'. In 'Android Monitor' tool window under the logcat tab, key in 'HelloMeActivity', you should see the message similar to below. If you click 'DISPLAY' another time, you'll see the message comes up twice.
-
-![logcat](images/logcat.png)
-
-**Simple debugging**
-
-Logging allows you to see the output your app produces, but sometimes you want to interact with your app while it's running to check variable values etc. Now you'll need to use the debug tool. 
-
-1. Click on the left margin of the editor (there's a name for this area, which is 'Gutter') to set breakpoints. First one at line 23, and the second one at line 24.
-
- ![breaks](images/breaks.png)
-
-2. Click Run ==> Debug 'app' to run in the debug mode. Key in your name in the text box and hit 'Display'. Now you'll see that your app stops at the first breakpoint.
-
- ![debug](images/debug.png)
-
-3. Click on the right most icon on the horizontal mini toolbar to bring up the 'Evaluate expression' window and type in 'nameToDisplay'. This gives you no results as expected, as the app hasn't reached that line yet.
-
-4. Click on the top icon on the vertical mini toolbar to resume the program. Now you'll see that variable you looked for previously i.e. 'nameToDisplay' is already there being displayed.
-
-### Git version control
-
-Android studio has built-in version control system (VCS) support. In fact, there's a system drop-down menu dedicated to it. Android Studio supports several different VCS tools. We'll use Git in all our examples as it's the most popular tool.
-
-1. Check if Git is available on the system. On machines in ECM15 Git has been installed. Open a terminal window and type in 'git' and then enter, if you see something like 'agreeing to the Xcode/iOS license requires admin privileges, please re-run as root via sudo', that means Git hasn't been configured properly. If that happens to you, open Xcode and accept all licenses and then use the git command in terminal to check again. You should see the following.
-
- > If you use Windows at home, you'll need to [download](https://git-scm.com/downloads) and install Git. Some versions of Git set a user's home folder as it's default location (e.g. C:\users\[your username]\). To get rid of this, you need to open Git shell in the Linux version, navigate to that location and delete a folder called `.git`.
-
- ![git](images/git.png)
-
-2. Go back to Android Studio, click VCS ==> Enable Version Control Integration..., and select Git as the tool. Now the 'Version Control' tool window will turn from pale to bright colors.
-
-3. Locate your project title in the left-most position in the navigation bar, right-click on it and select Git ==> Add to add all files in your current project under control o Git. If you look at the 'Local Changes' tab in the 'Version Control' tool window, your 'Unversioned Files' will disappear and all files are under 'Default'.
-
- ![vcs_default](images/vcs_default.png)
- 
-4. Click VCS ==> Commit Changes, and type in something as your commit message and hit commit. Your project at the current stage is saved in a snapshot, that means you can revert to it at any time later on.
-
- > Some people have problems with previous versions of Android Studio here. If you cannot commit, uncheck all check boxes and try again.
- 
- ![commit](images/Commit_Changes.png)
-
-## Lab 3 Advanced topics
-
-For those of you who haven't complete previous labs, you need to get those finished to move on. For those who have already finished, in this final lab, there are some challenging questions for you to explore. These questions are related to previous labs, but somehow involves more efforts to complete.
-
-### SDK components
-
-In the 1st lab, I showed you how to install SDK components using an easy approach. The advantage of doing it that way is it saves quite a lot efforts. But the other side of the coin is that it uses quite a lot of disk spaces. Now open the standalone SDK manager and see the things you have installed, try to answer the following questions:
-
- * Where are these tools physically located on your hard drive?
- * What are the different components, e.g. the difference between SDK tools, SDK platform-tools, SDK build-tools?
-
-> Hint: [Android SDK Manager](https://developer.android.com/studio/intro/update.html)
-
-### More Git
-
-The VCS tools I've showed you are supposed to be at introductory level. But Git itself is very sophisticated and extremely powerful. Now open a terminal window and navigate to the last project you created i.e. the one you set up to use Git in Android Studio. Issue the following commands and watch outputs, what do those mean?
-
-* git init
-* git log
-* git status
-
-> Hint: [Git References](http://gitref.org/creating/) and [File Status Highlights](https://www.jetbrains.com/idea/help/file-status-highlights.html) in Android Studio
-
-### Android Design Principles
-
-What every Android developer should know is that design comes before coding! There’re certain rules to follow when designing an app. With this regard, the official [Android Design Principles](http://developer.android.com/design/get-started/principles.html) and [Material design](http://www.google.com/design/spec/material-design/introduction.html) should be regarded as the 'bible'. However, keep in mind that most of these principles boil down to common sense, e.g. the rule that states you should keep your app simple and brief.
-
-* What is balance and proximity in the context of mobile app design?
-* What does 'material' refer to in Material Design?
