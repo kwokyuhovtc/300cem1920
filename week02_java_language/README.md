@@ -164,7 +164,6 @@ Following steps below to build a new class:
  ```kotlin
  init {
         this.message = "Your car is a $make built in $year."
-        count()
     }
  ```
  This method increase the internal counter each time it is called.
