@@ -280,7 +280,15 @@ Follow steps below to create a new app and design the layout:
 6. Switch to the text view, and edit the xml code so it looks like
 
  ```xml
-     <TextView
+     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -304,7 +312,8 @@ Follow steps below to create a new app and design the layout:
         android:layout_marginLeft="19dp"
         android:layout_marginRight="20dp"
         android:ems="10"
-        android:hint="e.g. BMW" />
+        android:hint="e.g. BMW"
+        android:minHeight="48dp" />
 
     <TextView
         android:id="@+id/labelYear"
@@ -323,7 +332,8 @@ Follow steps below to create a new app and design the layout:
         android:layout_marginRight="20dp"
         android:ems="10"
         android:hint="e.g. 1980"
-        android:inputType="number" />
+        android:inputType="number"
+        android:minHeight="48dp" />
 
     <TextView
         android:id="@+id/labelColor"
@@ -341,7 +351,8 @@ Follow steps below to create a new app and design the layout:
         android:layout_marginLeft="19dp"
         android:layout_marginRight="20dp"
         android:ems="10"
-        android:hint="e.g. Red" />
+        android:hint="e.g. Red"
+        android:minHeight="48dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -367,6 +378,8 @@ Follow steps below to create a new app and design the layout:
             android:text="Run Diesel" />
 
     </LinearLayout>
+
+</LinearLayout>
  ```
  You have seen most of the widgets and attributes before, but there're a couple new ones:
   * A LinearLayout is being contained by another LinearLayout. This is possible and, in fact, a good thing to have. The reason is that this is the most effective way of changing LinearLayout orientation on a local area.
@@ -377,15 +390,19 @@ Follow steps below to create a new app and design the layout:
 
 Go back to Vehicle.java, we need to prepare the class to make it ready.
 
-1. Generate a setter method for message instance variable.
+1. Create a fake getter and setter for message.
 
- ```java
- public void setMessage(String message) {
-        this.message = message;
- }
+ ```kotlin
+ fun setMessageString(message : String) {
+        this.message = message
+    }
+
+    open fun getMessageString() : String {
+        return this.message
+    }
  ```
 2. Insert an interface into the class, so that this is an inner interface.
- ```java
+ ```kotlin
  interface Controllable {
         void control();
  }
@@ -398,67 +415,80 @@ Go back to Vehicle.java, we need to prepare the class to make it ready.
  
 3. Click Code ==> Rearrange Code and Code ==> Reformat Code to make it look nicer.
 
-Now we're ready to explore inheritance in java:
+Now we're ready to explore inheritance in Kotlin:
 
-1. Create a new class called 'Car', and select 'Package Private' as the Visibility. By doing this, we give the class default (i.e. package level) access. That means only classes with the same package can access it.
- > You don't have to do this, but this will ensure that both subclasses in this file have the same access level. The important thing to remember is that in Java there can only be one public class per .java file.
+0. Make the Vehicle class 'open' for inheritance
+
+ ```kotlin
+open class Vehicle (var make : String = "Volvo",
+               var year : Int = 2012,
+               var message : String = "This is the default message.") {
+               
+               // original content
+
+}
+
+1. Create a new Kotlin class called 'Car'.
  
- ```java
- class Car extends Vehicle {
- }
+ ```kotlin
+ class Car (make : String,
+           year : Int,
+           message : String,
+           var color : String ) : Vehicle(make, year, message) {
+
+}
  ```
  
 2. Create another class called 'Diesel'. Make sure both Car and Diesel extends Vehicle. In addition, make sure Diesel implements Vehicle.Controllable.
  
- ```java
- class Diesel extends Vehicle {
- }
+ ```kotlin
+ class Diesel (make : String,
+              year : Int,
+              message : String,
+              var type : String = "Diesel") : Vehicle(make, year, message), Vehicle.Controllable {
+}
  ```
  You'll see that the Diesel class signature is highlighted with a red underline. The means there's something wrong with it. Move your mouse over and read the system message that says you need to implement the control() method.
  
- ```java
- class Diesel extends Vehicle implements Vehicle.Controllable {
- 
-    @Override
-    public void control() {
-        
+ ```kotlin
+ class Diesel (make : String,
+              year : Int,
+              message : String,
+              var type : String = "Diesel") : Vehicle(make, year, message), Vehicle.Controllable {
+
+    override fun control() {
+
     }
- }
+}
  ```
  
 3. Insert the following codes into your Car class:
  
- ```java
- class Car extends Vehicle{
+ ```kotlin
+ class Car (make : String,
+           year : Int,
+           message : String,
+           var color : String ) : Vehicle(make, year, message) {
 
-    private String color;
-    public Car(String make, int year, String color){
-        super(make, year);
-        this.color = color;
-        setMessage(getMessage() + " I like your shining " + color + " color.");
+    init{
+        this.message = "I like your shining $color color"
     }
  }
  
- class Diesel extends Vehicle implements Vehicle.Controllable{
+ class Diesel (make : String,
+              year : Int,
+              message : String,
+              var type : String = "Diesel") : Vehicle(make, year, message), Vehicle.Controllable {
 
-    private String type;
-
-    public Diesel(String make, int year){
-        super(make, year);
-        this.type = "Diesel";
+    override fun control() {
+        this.setMessageString("${super.getMessageString()} Emission is under control.")
     }
 
-    @Override
-    public void control() {
-        setMessage(super.getMessage() + " Emission is under control.");
+    override fun getMessageString(): String {
+        this.control()
+        return super.getMessageString()
     }
-
-    @Override
-    public String getMessage() {
-        control();
-        return super.getMessage();
-    }
- }
+}
  ```
  
  What this code does is that we create two subclasses of Vehicle, each has slightly different structure i.e.viariables/methods. Car has an additional field called color, and Diesel has one called type. In addition, Diesel has an additional control() method by implementing the Controllable interface. The idea is that by looking at the class signature i.e. `class Diesel extends Vehicle implements Vehicle.Controllable` we know that the Diesel class is capable of doing methods defined in `Controllable`.
@@ -474,62 +504,40 @@ Now we're ready to explore inheritance in java:
     
 4. Next, you need to link the layout with classes. Go back to MainActivity.java and insert variable declarations immediately after the class declaration.
  
- ```java
-    private static final String TAG = "MyCarActivity";
-    private EditText editTextMake;
-    private EditText editTextYear;
-    private EditText editTextColor;
+ ```kotlin
+    val TAG = "MyCarActivity"
+    var editTextMake : EditText? = null
+    var editTextYear : EditText? = null
+    var editTextColor : EditText? = null
  ```
 
  And then insert an onButtonClick method
  
- ```java
-    public void onButtonClick(View view) {
-        editTextMake = (EditText) findViewById(R.id.inputMake);
-        editTextYear = (EditText) findViewById(R.id.inputYear);
-        editTextColor = (EditText) findViewById(R.id.inputColor);
-        String make = editTextMake.getText().toString();
-        String strYear = editTextYear.getText().toString();
-        int intYear = Integer.parseInt(strYear);
-        String color = editTextColor.getText().toString();
+ ```kotlin
+    fun onButtonClick(view : View){
+        editTextMake = this.findViewById(R.id.inputMake)
+        editTextYear = this.findViewById(R.id.inputYear)
+        editTextColor = this.findViewById(R.id.inputColor)
+        val make = this.editTextMake?.text.toString()
+        val year = this.editTextYear?.text.toString()
+        val color = this.editTextColor?.text.toString()
+        val intYear = year.toInt()
+        var vehicle : Vehicle
 
-        Vehicle vehicle;
-        switch (view.getId()) {
-            case R.id.buttonRunPetrol:
-                vehicle = new Car(make, intYear, color);
-                break;
-            case R.id.buttonRunDiesel:
-                vehicle = new Diesel(make, intYear);
-                break;
-            default:
-                vehicle = new Vehicle();
-                break;
+        when(view.id){
+            R.id.buttonRunPetrol -> vehicle = Car(make, intYear, "", color)
+            R.id.buttonRunDiesel -> vehicle = Diesel(make, intYear, "")
+            else -> vehicle = Vehicle()
         }
 
-        if (Vehicle.counter == 5) {
-            vehicle = new Vehicle() {
-                @Override
-                public String getMessage() {
-                    return "You have pressed 5 times, stop it!";
-                }
-            };
-        }
+        Toast.makeText(this, vehicle.getMessageString(), Toast.LENGTH_LONG).show()
+        Log.d("ABC", "User clicked ${Vehicle.count} times")
+        Log.d(TAG, "User message is $vehicle.")
 
-        Toast.makeText(getApplicationContext(), vehicle.getMessage(), Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "User clicked " + Vehicle.counter + " times.");
-        Log.d(TAG, "User message is \"" + vehicle + "\".");
     }
  ```
  The idea of the code above is that depending on which button is being clicked we generate two different type of objects i.e. either Car or Diesel. Hence, we'll show our user different messages. If our user clicked 5 times, it'll pop back a totally different message warning they need to stop. The part of the code you need to pay attention to is listed below. This snippet creates an anonymous inner class with an overriding method and assigns it to the variable vehicle. We could create a subclass here, but the biggest advantage of using an anonymous inner class is that it makes your code more concise and tidy. It's vital you understand the syntax here as you'll see this a lot in following weeks.
- 
- ```java
- vehicle = new Vehicle() {
-                @Override
-                public String getMessage() {
-                    return "You have pressed 5 times, stop it!";
-                }
- };
- ```
+
 5. Insert `android:onClick="onButtonClick"' for both buttons in 'activity_main.xml'. Now if you run the app you'll see something similar to below
 
     ![bloodhound](images/bloodhound.png)
@@ -538,7 +546,7 @@ Now we're ready to explore inheritance in java:
     
     ![vw5](images/vw5.png)
 
-### Java naming conventions
+### Java/Kotlin naming conventions
 
 When you write you source code you need to follow certain conventions. There're two sets of conventions popularly use. One is from [Oracle](http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html) the other is from Google called [Google Java Style](https://google.github.io/styleguide/javaguide.html). In this module, we follow the Google one throughout.
 
@@ -562,32 +570,3 @@ There're also some rules you must follow especially when naming your variables:
 3. Interface names are objectives such as Controllable.
 4. Object names are nouns typically using lowerCamelCase
 
-## Lab 3 Advanced topics
-
-For those of you who haven't complete previous labs, you can work on it if you wish. For those who have finished, in this final lab, I'll ask some challenging questions for you to explore. These questions are related to previous labs, and somehow involves more efforts to complete.
-
-### Java patterns
-
-Most of the time the problems you're facing have been encountered by many other programmers and they have very likely been solved somewhere already. The commonly used ways of solving a specific type of problem are called a *pattern*. In Java there're many design patterns available, find out what the following means and some simple examples:
-
-    * Delegation
-    * Factory
-    * Singleton
-
-> Hint: [Replace Inheritance with Delegation](https://www.jetbrains.com/idea/help/replace-inheritance-with-delegation.html)
-
-### UML
-
-The UML (Unified Modeling Language) is a graphical notation for showing relations between different components of software. When you have multiple classes and objects, it's important to show the structure of your codes in an illustrative manner.
-
-    * Can you draw class diagrams for the second app we created i.e. My Car?
-
-> Hint: [UML - Class Diagram](http://www.tutorialspoint.com/uml/uml_class_diagram.htm)
-
-### Advanced language features
-
-The examples you have seen so far only showed you a tiny fraction of what's available in Java. There're some advanced features that you'll see in later weeks of the module. Try to google the following concepts and find some simple examples to play with.
-
-    * Static imports
-    * Generics
-    * ArrayList a.k.a. Collections Framework
