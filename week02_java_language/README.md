@@ -404,7 +404,7 @@ Go back to Vehicle.java, we need to prepare the class to make it ready.
 2. Insert an interface into the class, so that this is an inner interface.
  ```kotlin
  interface Controllable {
-        void control();
+        fun control();
  }
  ```
  An interface is like a class, it defines a set of *empty* methods. Any non-abstract classes that implement the interface must provide a method body for each of these methods. In this sense, we often call an interface as a 'contract' - it defines what the class is capable of i.e. its methods. 
@@ -544,7 +544,6 @@ open class Vehicle (var make : String = "Volvo",
     
     ![vw](images/vw.png)
     
-    ![vw5](images/vw5.png)
 
 ### Java/Kotlin naming conventions
 
