@@ -262,8 +262,8 @@ Next, let's need to use SharedPreferences API to save some simple data.
             inputStream!!.read(bytes)
             inputStream!!.close()
             val data = String(bytes)
-            editTextName!!.setText(data.split("\\|").toTypedArray()[0])
-            editTextPhone!!.setText(data.split("\\|").toTypedArray()[1])
+            editTextName!!.setText(data.split("|").toTypedArray()[0])
+            editTextPhone!!.setText(data.split("|").toTypedArray()[1])
             Toast.makeText(baseContext, "data loaded", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             e.printStackTrace()
