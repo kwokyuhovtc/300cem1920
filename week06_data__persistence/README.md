@@ -12,45 +12,56 @@ SharedPreferences is a way to save simple key-value pairs. In fact, the file pro
 
 Follow steps below to prepare the layout xml file:
 
-1. Start a new Android Studio project and name it 'My SharedPreferences'. In activity_main.xml, change the default layout to LinearLayout, add `android:orientation="vertical"`.
+1. Start a new Android Studio project and name it 'MySharedPreferences'. In activity_main.xml, change the default layout to LinearLayout, add `android:orientation="vertical"`.
 2. In the Design view, drag and drop the following items onto the layout, below the automatically generated 'Hello World' TextView, in the order of Plain Text, TextView, and Phone. All these three go below the 'Hello World' TextView that was  by the system. Rearrange the XML so it looks like below:
 
 ```xml
-<TextView
-    android:id="@+id/name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Name"/>
-
-<EditText
-    android:id="@+id/nameText"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:ems="10"
-    android:hint="Enter name here"
-    android:inputType="textPersonName"/>
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
-<TextView
-    android:id="@+id/phone"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Phone numer"/>
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"/>
 
-<EditText
-    android:id="@+id/phoneText"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:ems="10"
-    android:hint="Enter phone number here"
-    android:inputType="textCapWords|phone"
-    />
+    <EditText
+        android:id="@+id/nameText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Enter name here"
+        android:inputType="textPersonName"/>
 
-<Button
-    android:id="@+id/button"
-    android:layout_width="wrap_content"
-    android:layout_gravity="right"
-    android:layout_height="wrap_content"
-    android:text="Save"/>
+    <TextView
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Phone numer"/>
+
+    <EditText
+        android:id="@+id/phoneText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Enter phone number here"
+        android:inputType="textCapWords|phone"
+        />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_gravity="right"
+        android:layout_height="wrap_content"
+        android:text="Save"/>
+
+</LinearLayout>
 ```
 
 ![layout](.md_images/layout.png)
@@ -59,34 +70,35 @@ Next, let's need to use SharedPreferences API to save some simple data.
 
 1. Open MainActivity.java file and insert the following declarations immediately after the class declaration:
     
-    ```java
-    private EditText editTextName;
-    private EditText editTextPhone;
-    public static final String NAME_KEY = "NAME_KEY";
-    public static final String PHONE_KEY = "PHONE_KEY";
-    private SharedPreferences sharedPreferences;
+    ```kotlin
+    companion object {
+        const val NAME_KEY = "NAME_KEY"
+        const val PHONE_KEY = "PHONE_KEY"
+    }
+    private var editTextName: EditText? = null
+    private var editTextPhone: EditText? = null
+    private var sharedPreferences: SharedPreferences? = null
     ```
     
     Code above initializes two EditText objects that hold the user inputs and two static strings which are going to be used as keys in the key-value pairs.
     
 2. Modify the `onCreate()` method to match the following:
     
-    ```java
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        
-        editTextName = (EditText) findViewById(R.id.nameText);
-        editTextPhone = (EditText) findViewById(R.id.phoneText);
-        sharedPreferences = getSharedPreferences("MySharedPreMain", Context.MODE_PRIVATE);
-        
-        if (sharedPreferences.contains(NAME_KEY)) {
-            editTextName.setText(sharedPreferences.getString(NAME_KEY, ""));
+    ```kotlin
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_main_java)
+
+        editTextName = findViewById<View>(R.id.nameText) as EditText
+        editTextPhone = findViewById<View>(R.id.phoneText) as EditText
+        sharedPreferences = getSharedPreferences("MySharedPreMain", MODE_PRIVATE)
+
+        if (sharedPreferences!!.contains(NAME_KEY)) {
+            editTextName!!.setText(sharedPreferences!!.getString(NAME_KEY, ""))
         }
-        
-        if (sharedPreferences.contains(PHONE_KEY)) {
-            editTextPhone.setText(sharedPreferences.getString(PHONE_KEY, ""));
+        if (sharedPreferences!!.contains(PHONE_KEY)) {
+            editTextPhone!!.setText(sharedPreferences!!.getString(PHONE_KEY, ""))
         }
     }
     ```
@@ -95,13 +107,13 @@ Next, let's need to use SharedPreferences API to save some simple data.
     
 3. Create a call-back method that responds to the click event of the only button in the XML. Don't forget the `commit()` method, which is similar to `commit()` in FragmentTransaction. You also need to update the xml file to associate the button with this method by inserting `android:onClick="save"` line.
     
-    ```java
-    public void save(View v){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(NAME_KEY, editTextName.getText().toString());
-        editor.putString(PHONE_KEY, editTextPhone.getText().toString());
-        editor.commit();
-        Toast.makeText(v.getContext(),"data saved",Toast.LENGTH_SHORT).show();
+    ```kotlin
+    fun save(v: View) {
+        val editor = sharedPreferences!!.edit()
+        editor.putString(NAME_KEY, editTextName!!.text.toString())
+        editor.putString(PHONE_KEY, editTextPhone!!.text.toString())
+        editor.commit()
+        Toast.makeText(v.context, "data saved", Toast.LENGTH_SHORT).show()
     }
     ```
    
@@ -110,20 +122,6 @@ Next, let's need to use SharedPreferences API to save some simple data.
     ![switcher](.md_images/switcher.png)
     
     ![sp](.md_images/sp.png)
-    
-5. To actually see the file created, you'll need to run the app using an AVD and NOT your device (unless you root it). If in previous steps you use a real device, now switch to an AVD based on API 23 and save some data in the app. Click Tools ==> Android ==> Android Device Monitor to bring up the Android Device Monitor
-    
-    > It seems that latest Android APIs (24 and above) do not integrate well with [DDMS](https://developer.android.com/studio/profile/ddms.html), you will have to use an AVD that is based on Android 6.0 (API 23) or below. See [discussion on StackOverflow](https://stackoverflow.com/questions/34603355/android-device-monitor-data-folder-is-empty).
-    
-    In the File Explorer tab, go to Data ==> Data ==> com.example.jianhuayang.mysharedpreferences ==> shared_prefs folder, you'll see an XML file named 'MySharedPreMain.xml', which is the name you give earlier in the `getSharedPreference()` method. This is where your data are saved. Single-click on that xml file to select it, then click the Get Device File icon (the left-most icon in the toolbar) to export the file to your hard drive. 
-    
-    ![export](.md_images/export.png)
-    
-    If you open the file in a text editor, you'll see the contents. Note that key-value pairs are being stored as explicit texts in it. (Explicit texts cannot be used to save sensitive data).
-    
-    ![xml](.md_images/xml.png)
-    
-    > If you do it on a real device, you'll see that data folder is empty. That's because you don't have the admin a.k.a. root privileges to access contents in that folder. You can 'root' your device in a way similar to jailbreaking iPhones, but this is not recommended as it opens security holes. To see why you shouldn't root your device, read [the blog written by Srinivas](http://resources.infosecinstitute.com/android-hacking-security-part-9-insecure-local-storage-shared-preferences/), where SharedPreferences were used to manipulate game scores.
 
 ### Writing and reading to files
 
