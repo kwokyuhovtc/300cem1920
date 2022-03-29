@@ -337,41 +337,7 @@ In the following exercise, you are going to build a contact app to save some bas
 3. Modify your class to make it look like the following. You should automatically generate getters and setters instead of typing manually. You might need to 'Rearrange Code' after that.
     
     ```java
-    public class Contact {
-        private int id;
-        private String name;
-        private String phone;
-        
-        public Contact(int id, String name, String phone) {
-            this.id = id;
-            this.name = name;
-            this.phone = phone;
-        }
-        
-        public int getId() {
-            return id;
-        }
-        
-        public void setId(int id) {
-            this.id = id;
-        }
-        
-        public String getName() {
-            return name;
-        }
-        
-        public void setName(String name) {
-            this.name = name;
-        }
-        
-        public String getPhone() {
-            return phone;
-        }
-        
-        public void setPhone(String phone) {
-            this.phone = phone;
-        }
-    }
+    class Contact(var id: Int, var name: String, var phone: String)
     ```
 
 ### The layout file - the view
@@ -379,51 +345,62 @@ In the following exercise, you are going to build a contact app to save some bas
 Next, you will need to create a layout to accommodate the data model. Open activity_main.xml, replace the default layout with LinearLayout and insert `android:orientation="vertical"`. Delete the default TextView and insert the following
 
 ```xml
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="ID" />
-
-<EditText
-    android:id="@+id/IDText"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="insert ID"
-    android:inputType="number" />
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
-<TextView
-    android:id="@+id/textView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Name" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ID" />
 
-<EditText
-    android:id="@+id/nameText"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="insert name"
-    android:inputType="textPersonName" />
+    <EditText
+        android:id="@+id/IDText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="insert ID"
+        android:inputType="number" />
 
-<TextView
-    android:id="@+id/textView2"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Phone" />
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name" />
 
-<EditText
-    android:id="@+id/phoneText"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="insert phone number"
-    android:inputType="phone" />
+    <EditText
+        android:id="@+id/nameText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="insert name"
+        android:inputType="textPersonName" />
 
-<Button
-    android:id="@+id/save"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="right"
-    android:onClick="save"
-    android:text="Save" />
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone" />
+
+    <EditText
+        android:id="@+id/phoneText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="insert phone number"
+        android:inputType="phone" />
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:onClick="save"
+        android:text="Save" />
+
+</LinearLayout>
 ```
 
 ### The DB handler and activity - the controller
@@ -434,45 +411,45 @@ Once you have the model and view, you will need to work on how to link both toge
     
     ![](.md_images/sqliteh.png)
     
-    ```java
-    public class DatabaseHandler extends SQLiteOpenHelper{
-    
+    ```kotlin
+    class DatabaseHandler : SQLiteOpenHelper {
+
     }
     ```
     
 2. If you move your mouse over the red highlighted class declaration you'll see that you need to implement some abstract methods in order to inherit. Insert the following codes into the class to implement the two abstract methods.
     
-    ```java
-    @Override
-    public void onCreate(SQLiteDatabase db) {
+    ```kotlin
+     override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL("CREATE TABLE contactTable (colID, colName, colPhone)")
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    }
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
     ```
     
 3. What you'll see now is that even though you have implemented the two abstract methods, there's still an error saying no constructor available. Click Code ==> Generate... ==> Constructor, in the window that pops up select the first option (the one with fewer inputs). This will generate a constructor for you.
     
-    ```java
-    public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    ```kotlin
+    constructor(context: Context?, name: String?, factory: CursorFactory?, version: Int) : super(
+            context,
+            name,
+            factory,
+            version
+        ) {
     }
     ```
     
     There're four parameters that are passed on to super constructor. The first one is the current context and the second is the database name. The 3rd parameter is an SQLiteDatabase.CursorFactory. The last parameter is the database version, where most likely you'll want it to be 1. This auto-generated constructor is overwhelming as you don't need all those info for such a simple app. Replace it with the following simplified version:
     
-    ```java
-    public DatabaseHandler(Context context){
-        super(context, "testDB", null, 1);
-    }
+    ```kotlin
+    constructor(context: Context?) : super(context, "testDB", null, 1) {}
     ```
     
 4. By now all error messages (i.e. red underline highlights) should disappear, but still the `onCreate()` method is empty. Insert code into the method so it looks like the following:
 
-    ```java
-    public void onCreate(SQLiteDatabase db){
-        db.execSQL("CREATE TABLE contactTable (colID, colName, colPhone)");
+    ```kotlin
+    override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL("CREATE TABLE contactTable (colID, colName, colPhone)")
     }
     ```
     
@@ -480,23 +457,34 @@ Once you have the model and view, you will need to work on how to link both toge
     
 5. In order to have a functional storage, you need to read/write to it. In terms of SQL database, this is commonly referred to as CRUD i.e. create, read, update, and delete. Insert the following method into the DatabaseHandler class
     
-    ```java
-    public void addContact(Contact contact) {
-        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("colID", contact.getId());
-        contentValues.put("colName", contact.getName());
-        contentValues.put("colPhone", contact.getPhone());
-
-        long result = sqLiteDatabase.insert("contactTable", null, contentValues);
-
+    ```kotlin
+    fun addContact(contact: Contact) {
+        val sqLiteDatabase = writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put("colID", contact.id)
+        contentValues.put("colName", contact.name)
+        contentValues.put("colPhone", contact.phone)
+        val result = sqLiteDatabase.insert("contactTable", null, contentValues)
         if (result > 0) {
-            Log.d("dbhelper", "inserted successfully");
+            Log.d("dbhelper", "inserted successfully")
         } else {
-            Log.d("dbhelper", "failed to insert");
+            Log.d("dbhelper", "failed to insert")
         }
-        sqLiteDatabase.close();
+        sqLiteDatabase.close()
+    }
+    
+    fun loadContacts(): ArrayList<Contact> {
+        val sqLiteDatabase = readableDatabase
+        val list: ArrayList<Contact> = ArrayList<Contact>()
+        val c = sqLiteDatabase.rawQuery("SELECT * FROM contactTable", null)
+        while (c.moveToNext()) {
+            val colID = c.getString(0)
+            val colName = c.getString(1)
+            val colPhone = c.getString(2)
+            val contact = Contact(colID.toInt(), colName, colPhone)
+            list.add(contact)
+        }
+        return list
     }
     ```
     
@@ -504,29 +492,29 @@ Once you have the model and view, you will need to work on how to link both toge
     
 6. Now let's work on the MainActivity to link everything together. Open MainActivity.java file and declare these variables after class declaration.
 
-    ```java
-    private EditText idText;
-    private EditText nameText;
-    private EditText phoneText;
+    ```kotlin
+    private var idText: EditText? = null
+    private var nameText: EditText? = null
+    private var phoneText: EditText? = null
     ```
     
     Insert variable initializations in `onCreate()` method
 
-    ```java
-    idText = (EditText) findViewById(R.id.IDText);
-    nameText = (EditText) findViewById(R.id.nameText);
-    phoneText = (EditText) findViewById(R.id.phoneText);
+    ```kotlin
+    idText = findViewById<View>(R.id.IDText) as EditText
+    nameText = findViewById<View>(R.id.nameText) as EditText
+    phoneText = findViewById<View>(R.id.phoneText) as EditText
     ```
 
     Next, create a `save()` method. You should also associate this method with the 'save' button in activity_main.xml.
 
-    ```java
-    public void save(View v){
-        int anID = Integer.parseInt(idText.getText().toString());
-        String aName = nameText.getText().toString();
-        String aPhone = phoneText.getText().toString();
-        DatabaseHandler db = new DatabaseHandler(this);
-        db.addContact(new Contact(anID, aName, aPhone));
+    ```kotlin
+    fun save(v: View?) {
+        val anID = idText!!.text.toString().toInt()
+        val aName = nameText!!.text.toString()
+        val aPhone = phoneText!!.text.toString()
+        val db = DatabaseHandler(this)
+        db.addContact(Contact(anID, aName, aPhone))
     }
     ```
 
@@ -541,64 +529,4 @@ If you run this app in an AVD and insert some texts and click save, what you'll 
 
 ### Verify the results
 
-Open the Android Device Monitor, locate the SQLite database you just created. Export this file to your hard drive.
-
-![](.md_images/db_file.png)
-
-Next, download and install a tool called [SQLiteStudio](https://sqlitestudio.pl). Once installed, load your database in it. What you'll see is that the data you typed are actually being saved.
-
-Now you have finished database insertion. The rest of the CRUD operation follow exactly the same routes. With the help of [the official documentation of SQLiteDatabase class](https://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html), try to implement 'read', 'update' and 'delete'.
-
-<!-- ## Lab 3 Advanced topics
-
-### Free online tutorial
-
-You should be really careful with free online tutorials, as some may contain out-of-date or even incorrect information. One example is the SharedPreferences example on [TutorialsPoint](http://www.tutorialspoint.com/android/android_shared_preferences.htm) that still shows MODE_WORLD_READABLE and MODE_WORLD_WRITEABLE, both of which were [deprecated in API level 17](http://developer.android.com/reference/android/content/Context.html#MODE_WORLD_READABLE). In general, TutorialsPoint is a good website. But for this particular case at least it's not very helpful.
-
-### Array data using SharedPreferences
-
-Typically SharedPreferences APIs are designed to handle simple key-value pairs. But it can be configured to handle arrays as well. Consider the following code example, taken from [Stack Overflow](http://stackoverflow.com/questions/3876680/is-it-possible-to-add-an-array-or-object-to-sharedpreferences-on-android).  
-
-```java
-// to save string array
-public boolean saveArray(String[] array, String arrayName, Context mContext) {   
-    SharedPreferences prefs = mContext.getSharedPreferences("preferencename", 0);  
-    SharedPreferences.Editor editor = prefs.edit();  
-    editor.putInt(arrayName +"_size", array.length);  
-    for(int i=0;i<array.length;i++)  
-        editor.putString(arrayName + "_" + i, array[i]);  
-    return editor.commit();  
-} 
-    
-// to retrieve string array
-public String[] loadArray(String arrayName, Context mContext) {  
-    SharedPreferences prefs = mContext.getSharedPreferences("preferencename", 0);  
-    int size = prefs.getInt(arrayName + "_size", 0);  
-    String array[] = new String[size];  
-    for(int i=0;i<size;i++)  
-        array[i] = prefs.getString(arrayName + "_" + i, null);  
-    return array;  
-}  
-```
-
-* What will happen if the array size changes e.g. reduce?
-
-### External storage
-
-What you have done in lab 1 is to use internal storage. What can also be done is to use external storage i.e. SD card. The procedures are pretty much the same. The only two differences are:
-
-1.    You'll need to add permissions in the manifest.
-2.    You'll need to check the status `Environment.getExternalStorageState()`.
-
-* Can you change the example in lab 1 so that the system write to external storage?
-
-### SQLite CRUD operations
-
-Read through [the online tutorial written by Ravi Tamada](http://www.androidhive.info/2011/11/android-sqlite-database-tutorial/) and answer the following questions:
-
-* How to define a 'contract' class, as suggested [in the official Android guide](http://developer.android.com/training/basics/data-storage/databases.html), to improve the tutorial?
-* How would you implement 'delete'/'update' on the UI?
-
-### A demo project on using a pre-existing SQLite database is available in the repository -->
-
-
+Challenge, Try to use the loadContacts with ListView and CustomArrayAdapter to show a list of saved contact with a new activity named ListContactActivity.
