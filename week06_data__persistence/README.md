@@ -336,7 +336,7 @@ In the following exercise, you are going to build a contact app to save some bas
 2. Right-click in the Project tool window to create a new class, and name it Contact.
 3. Modify your class to make it look like the following. You should automatically generate getters and setters instead of typing manually. You might need to 'Rearrange Code' after that.
     
-    ```java
+    ```kotlin
     class Contact(var id: Int, var name: String, var phone: String)
     ```
 
@@ -409,7 +409,7 @@ Once you have the model and view, you will need to work on how to link both toge
 
 1. Create a new class called DatabseHandler extending SQLiteOpenHelper
     
-    ![](.md_images/sqliteh.png)
+    ![](.md_images/createKotlinClass.png)
     
     ```kotlin
     class DatabaseHandler : SQLiteOpenHelper {
