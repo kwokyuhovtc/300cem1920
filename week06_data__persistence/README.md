@@ -68,7 +68,7 @@ Follow steps below to prepare the layout xml file:
 
 Next, let's need to use SharedPreferences API to save some simple data.
 
-1. Open MainActivity.java file and insert the following declarations immediately after the class declaration:
+1. Open MainActivity.kt file and insert the following declarations immediately after the class declaration:
     
     ```kotlin
     companion object {
@@ -125,117 +125,126 @@ Next, let's need to use SharedPreferences API to save some simple data.
 
 ### Writing and reading to files
 
-Instead of writing to an internal XML file using SharedPreferences API, you can also use the standard Java IO API to read/write files as if Android is a small PC. 
-
-> In case you are new to Java I/O, have a look at [Java I/O Tutorials](https://docs.oracle.com/javase/tutorial/essential/io/) and [how to read data from InputStream into String in java](http://howtodoinjava.com/2013/10/06/how-to-read-data-from-inputstream-into-string-in-java/). 
-
-Follow steps below to create a simple app that stores some data in a file.
-
-1. Locate the 'My SharedPreferences' project you created earlier on your hard drive, make a copy of it and rename the new folder to 'MyFiles'.
-2. Open 'MyFiles' project, in activity_main.xml, in the Design view drag and drop a LinearLayout (horizontal) before the Button. Make sure this LinearLayout has 'layout_width="match_parent"' and 'layout_height="wrap_content"'.
-3. Switch to the  Text view, move the Button tag into this newly created LinearLayout.
-4. Switch back to the design view, drag and drop another button to the right of the Save button, and a Plain TextView to the left of the Save button. Make your layout look like this:
+1. Create a new project named 'MyFiles' (Empty Activity).
+2. Open 'MyFiles' project, in activity_main.xml, update the userface with the XML code given.
+3. Switch back to the design view, drag and drop another button to the right of the Save button, and a Plain TextView to the left of the Save button. Make your layout look like this:
     
     ![init](.md_images/init.png)
     
-5. Double click on the new button, change the text to Load, and id to load. 
-6. Double click on the new TextView, delete the text so it becomes blank. Switch back to the text view and give this TextView a weight of 1, and width/height of '0dp'. The finished XML LinearLayout should look like below. 
+4. Double click on the new button, change the text to Load, and id to load. 
+5. Double click on the new TextView, delete the text so it becomes blank. Switch back to the text view and give this TextView a weight of 1, and width/height of '0dp'. The finished XML LinearLayout should look like below. 
     
     ```xml
-    <LinearLayout
+    <?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="0dp"
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:text="Name"/>
+
+        <EditText
+            android:id="@+id/nameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Enter name here"
+            android:inputType="textPersonName"/>
+
+        <TextView
+            android:id="@+id/phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phone numer"/>
+
+        <EditText
+            android:id="@+id/phoneText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Enter phone number here"
+            android:inputType="textCapWords|phone"
             />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:onClick="save"
-            android:text="Save"/>
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Load"/>
-        
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:onClick="save"
+                android:text="Save"/>
+
+            <Button
+                android:id="@+id/load"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Load"/>
+
+        </LinearLayout>
+
     </LinearLayout>
     ```
     
     ![](.md_images/file_layout.png)
     
-7. Open MainActivity.java file, locate and delete the following lines of code
+7. Open MainActivity.kt file, in order to use file input/output, you need to declare some variables. The declaration goes together with EditeTexts' declaration
     
-    ```java
-    public static final String NAME_KEY = "NAME_KEY";
-    public static final String PHONE_KEY = "PHONE_KEY";
-    private SharedPreferences sharedPreferences;
-    ```
-    
-    and
-    
-    ```java
-    sharedPreferences = getSharedPreferences("MySharedPreMain", Context.MODE_PRIVATE);
-    
-    if (sharedPreferences.contains(NAME_KEY)) {
-        editTextName.setText(sharedPreferences.getString(NAME_KEY, ""));
+    ```kotlin
+    companion object {
+        const val FILE_NAME = "contacts.txt"
     }
+    private var editTextName: EditText? = null
+    private var editTextPhone: EditText? = null
+    private var file: File? = null
+    private var outputStream: FileOutputStream? = null
+    private var inputStream: FileInputStream? = null
+    ```
     
-    if (sharedPreferences.contains(PHONE_KEY)) {
-        editTextPhone.setText(sharedPreferences.getString(PHONE_KEY, ""));
+9. Inside the `onCreate()` method, update for loading UI and initializing the file object:
+    
+    ```kotlin
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main_java_file)
+        editTextName = findViewById<View>(R.id.nameText) as EditText
+        editTextPhone = findViewById<View>(R.id.phoneText) as EditText
+        file = File(this.filesDir, FILE_NAME)
     }
-    
-    ```
-    
-    and finally
-    
-    ```java
-    SharedPreferences.Editor editor = sharedPreferences.edit();
-    editor.putString(NAME_KEY, editTextName.getText().toString());
-    editor.putString(PHONE_KEY, editTextPhone.getText().toString());
-    editor.commit();
-    ```
-
-8. In order to use file input/output, you need to declare some variables. The declaration goes together with EditeTexts' declaration
-    
-    ```java
-    private EditText editTextName;
-    private EditText editTextPhone;
-    public static final String FILE_NAME = "contacts.txt";
-    private File file;
-    private FileOutputStream outputStream;
-    private FileInputStream inputStream;
-    ```
-    
-9. Inside the `onCreate()` method insert a line to initialize the file object:
-    
-    ```java
-    file = new File(this.getFilesDir(), FILE_NAME);
     ```
     
     This will create a new file at the system default location for your app with the given file name.
     
 10. Modify the `save()` method, so it looks like below
     
-    ```java
-    public void save(View v) {
-        String data = editTextName.getText().toString() + "|" + editTextPhone.getText().toString();
+    ```kotlin
+    fun save(v: View?) {
+        val data = editTextName!!.text.toString() + "|" + editTextPhone!!.text.toString()
         try {
-            outputStream = new FileOutputStream(file);
-            outputStream.write(data.getBytes());
-            outputStream.close();
-            Toast.makeText(this, "data saved", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            e.printStackTrace();
+            outputStream = FileOutputStream(file)
+            outputStream!!.write(data.toByteArray())
+            outputStream!!.close()
+            Toast.makeText(this, "data saved", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
     ```
@@ -244,20 +253,20 @@ Follow steps below to create a simple app that stores some data in a file.
     
 11. Create a new method called `load()`, using the following lines of codes:
     
-    ```java
-    public void load(View v) {
-        int length = (int) file.length();
-        byte[] bytes = new byte[length];
+    ```kotlin
+    fun load(v: View?) {
+        val length = file!!.length().toInt()
+        val bytes = ByteArray(length)
         try {
-            inputStream = new FileInputStream(file);
-            inputStream.read(bytes);
-            inputStream.close();
-            String data = new String(bytes);
-            editTextName.setText(data.split("\\|")[0]);
-            editTextPhone.setText(data.split("\\|")[1]);
-            Toast.makeText(getBaseContext(), "data loaded", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            e.printStackTrace();
+            inputStream = FileInputStream(file)
+            inputStream!!.read(bytes)
+            inputStream!!.close()
+            val data = String(bytes)
+            editTextName!!.setText(data.split("\\|").toTypedArray()[0])
+            editTextPhone!!.setText(data.split("\\|").toTypedArray()[1])
+            Toast.makeText(baseContext, "data loaded", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
     ```
