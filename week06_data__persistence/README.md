@@ -88,7 +88,7 @@ Next, let's need to use SharedPreferences API to save some simple data.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main_java)
+        setContentView(R.layout.activity_main)
 
         editTextName = findViewById<View>(R.id.nameText) as EditText
         editTextPhone = findViewById<View>(R.id.phoneText) as EditText
