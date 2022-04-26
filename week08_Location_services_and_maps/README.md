@@ -321,68 +321,62 @@ Also, note the default restrictions. If your app needs to use the API, it's fing
 
 ### The app
 
-Uninstall any MyLocation apps on your AVD/devices if exists. Download our demo project MyMap and replace the contents of google_maps_api.xml with the key you generated in 'Get started' project. Run this project and you'll see that on the first load, the app looks like below
-
-![](.md_images/app2_1st.png)
-
-In AVD Extended controls window, set the initial location to be 38.6347 and -90.2941 for latitude and longitude respectively, click Send. Next, download [a sample GPX file from Geovative](http://www.geovative.com/GeoToursWebApp/DownloadFile.aspx?vq=JD2QD3JVBAUEBGEIFBQ8L7PURB92NJ&q190y1nqgB2r=Tck&y1tQ190y1nqgB2r=Tck&y1th5r4Vq=) and load it into AVD Extended controls window.
-
-![](.md_images/ec.png)
-
-In the app, click On/Off button, this will start/stop the GoogleApiClient. This will also enable the other buttons. Click on Map Frag, which stands for map fragment. Then click on the green triangle in AVD Extended controls window to start GPS playback. You'll see that as mock location changes, the app draws polylines joining some (not all!) of its determined locations.
-
-![](.md_images/app2_lines.png)
+Create a Project named MyMap
 
 ### Source code 
 
-__Add a map__
+1. Synchronize build.gradle(app)
 
-The app shows you two ways to add a map to an app: one uses a fragment, the other uses a MapView. Special attentions need to be paid when using MapView as one needs to [forward some activity lifecycle methods e.g. `onResume()`](https://developers.google.com/android/reference/com/google/android/gms/maps/MapView).
+    ```xml
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    ```
 
-```java
-//map using fragment
-SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(mapFrag);
-        mapFragment.getMapAsync(this);
-```
+2. Add API at AndroidManifest
 
-```java
-//map using mapview
-mapView = (MapView) findViewById(R.id.mapFrag);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
-```
+    ```xml
+    <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR_API_KEY" />
+    ```
 
-__Sync location data__
+3. Add Map Fragment at activity_main.xml
+    ```xml
+    <?xml version="1.0" encoding="utf-8"?>
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MapsActivity" />
+    ```
+4. In MainActivity.kt, define the google map object
+    ```kotlin
+    private lateinit var mMap: GoogleMap
+    ```
+5. Set MainActivity implements OnMapReadyCallback 
+   ```kotlin
+   class MapsActivity : AppCompatActivity(), OnMapReadyCallback
+   ```
 
-To synchronize location data from MainActivity to MapFragActivity, the app uses [the observer pattern](https://en.wikipedia.org/wiki/Observer_pattern). This is very similar to other OnXXListeners in the SDK.
+6. In MainActivity.kt, load the google map fragment
+    ```kotlin
+    val mapFragment = supportFragmentManager
+                .findFragmentById(R.id.map) as SupportMapFragment
+            mapFragment.getMapAsync(this)
+    ```
 
-> [Read Stack Overflow discussions on How to make listener to a custom variable](http://stackoverflow.com/questions/9879780/android-how-to-make-listener-to-a-custom-variable)
+7. In MainActivity.kt, implement the onMapReady callback function, load the googleMap object, and add an annoation on it
+     ```kotlin
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
 
-The MainActivity declares an interface, a member variable that belongs to that interface, and some actions this variable will take
-
-```java
-public interface OnCurrentLocationChangeListener {
-    void onCurrentLocationChange(Location location);
-}
-
-static private OnCurrentLocationChangeListener mOnCurrentLocationChangeListener;
-
-@Override
-public void onLocationChanged(Location location) {
-    mOnCurrentLocationChangeListener.onCurrentLocationChange(location);
-}
-```
-
-Then, MapFragActivity implements that interface, and trace back the class and sets its listener
-
-```java
-public class MapFragActivity extends FragmentActivity implements MainActivity.OnCurrentLocationChangeListener {
-
-MainActivity.setOnCurrentLocationChangeListener(this);
-
-@Override
-    public void onCurrentLocationChange(Location location) {
+        // Add a marker in Sydney and move the camera
+        val sydney = LatLng(-34.0, 151.0)
+        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
+    ```
 
-```
+
