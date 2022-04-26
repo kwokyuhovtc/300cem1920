@@ -22,8 +22,9 @@ Follow steps below to download the sample app from module's GitHub page and run 
 2. Create a Project Named MyLocation with Empty Activity.
     
     Add the following dependency in build.gradle(app)
-    ```implementation 'com.google.android.gms:play-services-location:19.0.1'
-    
+    ```
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    ```
 
 ### Source code
 
