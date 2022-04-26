@@ -19,26 +19,11 @@ Follow steps below to download the sample app from module's GitHub page and run 
     
     ![](.md_images/sdk.png)
     
-2. Install the app. Download sample project called MyLocation from module's GitHub page, and open it in Android Studio. Click Build ==> Rebuild Project. In case that the system complains about Google Play services version required is different from what is installed, you'll need to delete existing dependency and replace it with the one you have.
+2. Create a Project Named MyLocation with Empty Activity.
     
-    ![](.md_images/dependency.png)
+    Add the following dependency in build.gradle(app)
+    ```implementation 'com.google.android.gms:play-services-location:19.0.1'
     
-    <!-- > Depending on the version of your Android Studio SDK and version of your AVD/device, you might receive an error message saying something like 'W/GooglePlayServicesUtil: Google Play services out of date. Requires 10084000 but found 9877470'. This basically means that you declare a dependency of com.google.android.gms:play-services in build.gradle that is newer than the version installed in AVD/device. If you are running on a real device, you need to update your version of Google Play Services. [If you running on an emulator, you will need to downgrade build.gradle to version 9.8.0 or 9.6.1 of the Play Services. There is no released emulator image that supports version 10.0.0](http://stackoverflow.com/questions/40740372/cannot-create-a-user-with-latest-firebase-version-i-get-a-w-dynamitemodule-and). -->
-3. Get the permission. Run the app on an AVD (preferably not a real device, as you'll need to mock locations later), the first screen you'll see is something like below. These are really placeholders.
-    
-    ![](.md_images/app_1st.png)
-    
-    Now if you click On/Off button, it'll ask your permission to access device location. Click Allow.
-    
-    ![](.md_images/app_allow.png)
-    
-4. Simulate location changes in AVD. In the Extended controls window for AVD, in the Location tab, insert the following location for latitude and longitude respectively, 52.191064 and -1.707510, and click Send.
-    
-    ![](.md_images/app_mock.png)
-    
-5. Determine current location and display Address. If you click the Locate button in the app you'll see that the above latitude/longitude corresponds to an address in Stratford (Shakespeare birthplace). If you then decide to mock a new location and send to the AVD, the app should pick this new location automatically for you.
-    
-    ![](.md_images/app_locate.png)
 
 ### Source code
 
@@ -52,85 +37,264 @@ The app needs to access the device's location. There're two parts to get this do
     
     ```xml
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     ```
     
-2. In MainActivity.java, check if permission is granted or not. If not, request that permission. You'll only need to do this once.
-    
-    ```java
-   if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-           PackageManager.PERMISSION_GRANTED) {
-       ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-               REQUEST_LOCATION);
-   }
+    Set the activity_main.xml
+    ```xml
+    <?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    tools:context=".MainActivity">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Latitude:"/>
+
+        <TextView
+            android:id="@+id/latitude_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            android:text="latitude"
+            android:textIsSelectable="true"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:text="Longitude:"/>
+
+        <TextView
+            android:id="@+id/longitude_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="72dp"
+            android:text="longitude"
+            android:textIsSelectable="true"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="96dp"
+            android:text="Time:"/>
+
+        <TextView
+            android:id="@+id/time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="120dp"
+            android:text="time"
+            android:textIsSelectable="true"
+            android:textSize="16sp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="144dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onStartClicked"
+                android:text="on/off"/>
+
+            <Button
+                android:id="@+id/locate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onLocateClicked"
+                android:text="Locate"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/output"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="200dp"
+            android:gravity="top"
+            android:text="output area"/>
+
+    </RelativeLayout>
+    ```
+    Enable Jetifier at gradle.properties
+    ```
+    android.useAndroidX=true
+    android.enableJetifier=true
     ```
     
-    How Android system handles permission has changed. The old way was to require all permissions upon installation. And the new way is to require individual permission on first use.
+    
+2. In MainActivity.kt, set the following variables:
+    ```kotlin
+    // member views
+    protected var mLatitudeText: TextView? = null
+    protected var mLongitudeText: TextView? = null
+    protected var mTimeText: TextView? = null
+    protected var mOutput: TextView? = null
+    protected var mLocateButton: Button? = null
 
-__Get last known location__
+    // member variables that hold location info
+    protected var mLastLocation: Location? = null
+    protected var mLocationRequest: LocationRequest? = null
+    protected var mGeocoder: Geocoder? = null
+    protected var mLocationProvider: FusedLocationProviderClient? = null
+    
+    companion object {
+        var REQUEST_LOCATION = 1
+    }
+    ```    
 
-The app builds the GoogleApiClient to begin with. Once it is built, the client connects to Google Play services in the background. If it connects successfully, getting the last known location is just a single line of code
+3. In MainActivity.kt, define the LocationCallback Objects:
+    ```kotlin
+    var mLocationCallBack: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(result: LocationResult) {
+            mLastLocation = result.lastLocation
+            mLatitudeText!!.text = mLastLocation!!.latitude.toString()
+            mLongitudeText!!.text = mLastLocation!!.longitude.toString()
+            mTimeText!!.text = DateFormat.getTimeInstance().format(Date())
+        }
+    }
+    ```    
+    
+4. In MainActivity.kt, add the following into onCreate function after setContentView:
+    ```kotlin
+    // initialize views
+        mLatitudeText = findViewById<View>(R.id.latitude_text) as TextView
+        mLongitudeText = findViewById<View>(R.id.longitude_text) as TextView
+        mTimeText = findViewById<View>(R.id.time_text) as TextView
+        mLocateButton = findViewById<View>(R.id.locate) as Button
+        mOutput = findViewById<View>(R.id.output) as TextView
 
-```java
-mLastLocation = LocationServices.getFusedLocationProviderClient(this).getLastLocation().getResult();
-```
-
-Note here even though at the very beginning of this document we mentioned that the Google Play services location APIs are preferred over the Android framework location APIs, `getLastLocation()` function will, in fact, return an `android.location.Location` object.
-
-__Receive location updates__
-
-To receive location updates, i.e. get notified each time the device has a new location, use the following code
-
-```java
-LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(req, callback, Looper.myLooper());
-```
-
-In the above code, `this` pass the current object as the listener by implementing the `onLocationChanged()` method.
-
-```java
-LocationCallback callback = new LocationCallback() {
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                Location location = locationResult.getLastLocation();
+        // below are placeholder values used when the app doesn't have the permission
+        mLatitudeText!!.text = "Latitude not available yet"
+        mLongitudeText!!.text = "Longitude not available yet"
+        mTimeText!!.text = "Time not available yet"
+        mOutput!!.text = ""
+        val locationPermissionRequest = registerForActivityResult(
+            RequestMultiplePermissions(),
+            ActivityResultCallback<Map<String?, Boolean?>> { result: Map<String?, Boolean?> ->
+                val fineLocationGranted = result.getOrDefault(
+                    Manifest.permission.ACCESS_FINE_LOCATION, false
+                )
+                val coarseLocationGranted = result.getOrDefault(
+                    Manifest.permission.ACCESS_COARSE_LOCATION, false
+                )
+                if (fineLocationGranted != null && fineLocationGranted) {
+                    // Precise location access granted.
+                    // permissionOk = true;
+                    mTimeText!!.text = "permission granted"
+                } else if (coarseLocationGranted != null && coarseLocationGranted) {
+                    // Only approximate location access granted.
+                    // permissionOk = true;
+                    mTimeText!!.text = "permission granted"
+                } else {
+                    // permissionOk = false;
+                    // No location access granted.
+                    mTimeText!!.text = "permission not granted"
+                }
             }
-        };
-```
+        )
+        locationPermissionRequest.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
 
-__Turn geographic location into addresses__
 
-To convert geographic location into an address, or the opposite, you'll need the Geocoder class from android.location.
+        // LocationReques sets how often etc the app receives location updates
+        mLocationRequest = LocationRequest()
+        mLocationRequest!!.interval = 10
+        mLocationRequest!!.fastestInterval = 5
+        mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    ```
 
-```java
-List<Address> addresses = mGeocoder.getFromLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 1);
-```
+How Android system handles permission has changed. The old way was to require all permissions upon installation. And the new way is to require individual permission on first use.
 
-In fact, the three classes we need from android.location are Address, Geocoder, and Location.
 
-__Support library__
+6. In MainActivity.kt, implement the onStartClicked function
+    
+    ```kotlin
+   
+    mLocationProvider = LocationServices.getFusedLocationProviderClient(this)
+    mTimeText!!.text = "Started updating location"
+        mLocationProvider!!.requestLocationUpdates(
+            mLocationRequest!!,
+            mLocationCallBack, Looper.getMainLooper()
+        )
+    ```
+ 
+ 6. In MainActivity.kt, implement the onLocateClicked function
+    
+    ```kotlin
+   
+    mGeocoder = Geocoder(this)
+        try {
+            // Only 1 address is needed here.
+            val addresses = mGeocoder!!.getFromLocation(
+                mLastLocation!!.latitude, mLastLocation!!.longitude, 1
+            )
+            if (addresses.size == 1) {
+                val address = addresses[0]
+                val addressLines = StringBuilder()
+                //see herehttps://stackoverflow
+                // .com/questions/44983507/android-getmaxaddresslineindex-returns-0-for-line-1
+                if (address.maxAddressLineIndex > 0) {
+                    for (i in 0 until address.maxAddressLineIndex) {
+                        addressLines.append(
+                            """
+    ${address.getAddressLine(i)}
+    
+    """.trimIndent()
+                        )
+                    }
+                } else {
+                    addressLines.append(address.getAddressLine(0))
+                }
+                mOutput!!.text = addressLines
+            } else {
+                mOutput!!.text = "WARNING! Geocoder returned more than 1 addresses!"
+            }
+        } catch (e: Exception) {
+        }
+    ```
+    
 
-If you open build.gradle (Module: app) file, you'll see that you have one support library added
 
-```xml
-apply plugin: 'com.android.application'
-    ...
-
-    dependencies {
-        compile 'com.google.android.gms:play-services-location:18.0.0'
-    }
-```
-
-Note that the simplest way of including Google Play Services in Android is to include everything in it
-
-```xml
-apply plugin: 'com.android.application'
-    ...
-
-    dependencies {
-        compile 'com.google.android.gms:play-services:11.0.4'
-    }
-```
-
-However, this is not a good practice as it'll include everything in your project and make it unnecessarily large. Take a look at the [Official guide on Setting Up Google Play Services](https://developers.google.com/android/guides/setup)
+7. Get the permission. Run the app on an AVD (preferably not a real device, as you'll need to mock locations later), the first screen you'll see is something like below. These are really placeholders.
+    
+    ![](.md_images/app_1st.png)
+    
+    Now if you click On/Off button, it'll ask your permission to access device location. Click Allow.
+    
+    ![](.md_images/app_allow.png)
+    
+8. Simulate location changes in AVD. In the Extended controls window for AVD, in the Location tab, insert the following location for latitude and longitude respectively, 52.191064 and -1.707510, and click Send.
+    
+    ![](.md_images/app_mock.png)
+    
+9. Determine current location and display Address. If you click the Locate button in the app you'll see that the above latitude/longitude corresponds to an address in Stratford (Shakespeare birthplace). If you then decide to mock a new location and send to the AVD, the app should pick this new location automatically for you.
+    
+    ![](.md_images/app_locate.png)
+    
 
 ## Lab 2 Google Maps
 
