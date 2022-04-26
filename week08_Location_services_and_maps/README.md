@@ -22,7 +22,7 @@ Follow steps below to download the sample app from module's GitHub page and run 
 2. Create a Project Named MyLocation with Empty Activity.
     
     Add the following dependency in build.gradle(app)
-    ```
+    ```xml
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     ```
 
@@ -137,7 +137,7 @@ The app needs to access the device's location. There're two parts to get this do
     </RelativeLayout>
     ```
     Enable Jetifier at gradle.properties
-    ```
+    ```xml
     android.useAndroidX=true
     android.enableJetifier=true
     ```
